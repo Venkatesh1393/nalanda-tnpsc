@@ -1,0 +1,86 @@
+{
+  "page": {
+    "title": "Subscription",
+    "dashboard": "Dashboard",
+    "subtitle": "Manage your plan and see what it unlocks."
+  },
+  "currentPlan": {
+    "title": "Current Plan",
+    "statusLabel": "Status",
+    "billingLabel": "Billing",
+    "startedLabel": "Started",
+    "endsLabel": "Ends",
+    "noDate": "—",
+    "entitlementsTitle": "What's included",
+    "noEntitlements": "Upgrade to unlock premium features.",
+    "loadErrorTitle": "Couldn't load your subscription",
+    "cancelButton": "Cancel Plan",
+    "cancelDialogTitle": "Cancel your subscription?",
+    "cancelDialogDescription": "You'll keep every current-plan feature until {{date}} — after that, your account moves back to Free. This can't be undone from here.",
+    "confirmCancelButton": "Yes, cancel my plan",
+    "cancelledToast": "Your plan is cancelled. You'll keep access until {{date}}.",
+    "cancelErrorToast": "Couldn't cancel your plan — please try again.",
+    "status": {
+      "inactive": "Inactive",
+      "active": "Active",
+      "past_due": "Past due",
+      "cancelled": "Cancelled",
+      "expired": "Expired"
+    },
+    "feature": {
+      "ai_explanations": "AI Explanations",
+      "ai_tutor": "AI Tutor",
+      "premium_practice": "Premium Practice",
+      "advanced_analytics": "Advanced Analytics",
+      "premium_study_material": "Premium Study Material",
+      "additional_mock_exams": "Additional Mock Exams"
+    }
+  },
+  "plans": {
+    "title": "All Plans",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "perMonth": "/ month",
+    "perYear": "/ year",
+    "free": "Free",
+    "custom": "Custom",
+    "currentPlanBadge": "Current Plan",
+    "upgradeButton": "Upgrade",
+    "talkToSales": "Talk to Sales",
+    "errorTitle": "Couldn't load plans",
+    "tierNames": {
+      "free": "Free",
+      "plus": "Plus",
+      "pro": "Pro",
+      "institutional": "Institutional"
+    }
+  },
+  "checkout": {
+    "description": "Nalanda TNPSC — {{tier}} plan",
+    "verifiedToast": "Payment received — activating your plan…",
+    "verifyErrorToast": "We couldn't verify your payment automatically. If money was deducted, contact support — we'll sort it out.",
+    "cancelledToast": "Checkout cancelled — no charge was made.",
+    "failedToast": "Payment failed: {{reason}}",
+    "orderErrorToast": "Couldn't start checkout — please try again.",
+    "scriptLoadErrorToast": "Couldn't load the payment form — check your connection and try again."
+  },
+  "history": {
+    "title": "Payment History",
+    "loadErrorTitle": "Couldn't load your payment history",
+    "empty": "No payments yet",
+    "viewReceipt": "View",
+    "columns": {
+      "plan": "Plan",
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date",
+      "receipt": "Receipt"
+    },
+    "status": {
+      "created": "Pending",
+      "captured": "Paid",
+      "failed": "Failed",
+      "refunded": "Refunded"
+    }
+  }
+}

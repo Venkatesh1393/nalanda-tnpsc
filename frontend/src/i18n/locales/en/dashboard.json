@@ -1,0 +1,119 @@
+{
+  "page": {
+    "settingsAriaLabel": "Settings",
+    "logOut": "Log out",
+    "loggedOutToast": "Logged out"
+  },
+  "welcomeBanner": {
+    "greetingMorning": "Good morning, {{name}}",
+    "greetingAfternoon": "Good afternoon, {{name}}",
+    "greetingEvening": "Good evening, {{name}}",
+    "continueStudying": "Continue Studying"
+  },
+  "dailyStudyGoalCard": {
+    "heading": "Today's Study Goal",
+    "progressAriaLabel": "Today's study goal progress",
+    "minutesProgress": "{{done}} of {{goal}} min today",
+    "noGoalSet": "Set a daily goal to track your progress here.",
+    "adjustGoal": "Adjust goal"
+  },
+  "todayTasksCard": {
+    "heading": "Today's Tasks",
+    "errorTitle": "Couldn't load today's tasks",
+    "noPlanPrefix": "No study plan yet —",
+    "generateOne": "generate one",
+    "noPlanSuffix": "to see tasks here.",
+    "allDone": "Nothing left for today — great pace.",
+    "markAsDoneAriaLabel": "Mark \"{{title}}\" as done"
+  },
+  "statsRow": {
+    "studyStreakLabel": "Study Streak",
+    "streakDays": "{{count}} days",
+    "bestStreak": "Best: {{count}}",
+    "xpPointsLabel": "XP Points (Lv {{level}})",
+    "thisWeek": "this week",
+    "coinsLabel": "Coins",
+    "rankLabel": "Rank",
+    "rankNotYetTrend": "Take a few mock tests to see your rank",
+    "rankTopPercent": "Top {{percent}}%",
+    "rankSmallCohortTrend": "Based on a smaller group of aspirants",
+    "rankTrend": "#{{rank}} of {{total}}"
+  },
+  "weeklyProgressCard": {
+    "heading": "Weekly Progress",
+    "viewFullAnalytics": "View full Analytics",
+    "errorTitle": "Couldn't load your weekly progress",
+    "emptyText": "Start today and this fills in as you go.",
+    "studiedDays": "You studied {{count}} of the last 7 days."
+  },
+  "continueLearningCard": {
+    "errorTitle": "Couldn't load Continue Learning",
+    "emptyTitle": "Start your first topic",
+    "emptyDescription": "Pick up any subject and we'll bring you right back here next time.",
+    "emptyActionLabel": "Browse Subjects"
+  },
+  "recommendedTopicsCard": {
+    "heading": "Recommended Topics",
+    "errorTitle": "Couldn't load recommendations",
+    "emptyText": "Complete a few quizzes and we'll start recommending topics here."
+  },
+  "weakSubjectsCard": {
+    "heading": "Weak Subjects",
+    "errorTitle": "Couldn't load weak subjects",
+    "emptyText": "No clear weak spots right now — keep it up.",
+    "accuracyText": "{{accuracy}}% accuracy",
+    "notEnoughData": "Not enough data yet",
+    "studyThisTopic": "Study this topic"
+  },
+  "currentAffairsCard": {
+    "heading": "Current Affairs",
+    "viewAll": "See Full Current Affairs",
+    "errorTitle": "Couldn't load today's current affairs",
+    "emptyText": "Nothing new today — check back soon."
+  },
+  "upcomingExamsCard": {
+    "heading": "Upcoming Exams",
+    "errorTitle": "Couldn't load upcoming exams",
+    "emptyText": "No live exams scheduled yet — we'll notify you.",
+    "liveSoon": "Live soon",
+    "view": "View"
+  },
+  "quickPracticeCard": {
+    "heading": "Quick Practice",
+    "modes": {
+      "hundredQuestions": "100 Questions",
+      "quiz": "Topic Quiz",
+      "sectional": "Sectional Test",
+      "mock": "Mock Test"
+    }
+  },
+  "aiMentorCard": {
+    "heading": "AI Mentor",
+    "errorTitle": "Your AI mentor is briefly unavailable",
+    "askButton": "Ask AI a question",
+    "toastTitle": "AI doubt chat is coming soon",
+    "toastDescription": "This entry point is ready — the chat panel isn't built yet."
+  },
+  "notificationsCard": {
+    "heading": "Notifications",
+    "viewAll": "View All",
+    "errorTitle": "Couldn't load notifications",
+    "emptyText": "You're all caught up."
+  },
+  "recentActivityCard": {
+    "heading": "Recent Activity",
+    "errorTitle": "Couldn't load recent activity",
+    "emptyText": "Your activity will show up here once you start studying."
+  },
+  "achievementsCard": {
+    "heading": "Achievements",
+    "viewAll": "View All",
+    "errorTitle": "Couldn't load achievements",
+    "lockedAriaLabel": "{{title}} — locked"
+  },
+  "premiumBanner": {
+    "heading": "Unlock more with Plus",
+    "description": "Unlimited mock tests, unlimited hints, and full PYQ history — starting at ₹49/month.",
+    "upgrade": "Upgrade"
+  }
+}

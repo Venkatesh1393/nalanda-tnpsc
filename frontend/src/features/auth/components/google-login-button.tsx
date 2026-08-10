@@ -1,0 +1,90 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
+
+import { Button } from '@/components/ui/button'
+import { ROUTES } from '@/constants/routes'
+import { useAuth } from '@/hooks/use-auth'
+import { loginWithGoogle } from '@/services/authService'
+
+/** Google's standard 4-color "G" mark — the one third-party brand icon in
+ * the product, per Google's own sign-in-button guidelines; not part of the
+ * Lucide outline icon system (docs/UI_Design_System.md §23) on purpose. */
+function GoogleGlyph() {
+  return (
+    <svg viewBox="0 0 48 48" className="size-4" aria-hidden="true">
+      <path
+        fill="#FFC107"
+        d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"
+      />
+      <path
+        fill="#FF3D00"
+        d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4c-7.5 0-14 4.2-17.7 10.7z"
+      />
+      <path
+        fill="#4CAF50"
+        d="M24 44c5.4 0 10.3-1.8 14.1-5.1l-6.5-5.5C29.4 35 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.9 39.7 16.4 44 24 44z"
+      />
+      <path
+        fill="#1976D2"
+        d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.2 5.5l6.5 5.5C41.5 35.9 44 30.5 44 24c0-1.3-.1-2.7-.4-3.5z"
+      />
+    </svg>
+  )
+}
+
+type GoogleLoginButtonProps = {
+  /** Where an already-onboarded account lands (e.g. "back to where they came
+   * from" on Login, or the Dashboard). An account that hasn't completed
+   * Onboarding yet always goes there instead — decided by the real,
+   * backend-sourced `user.onboardingCompleted` (Step 44), not by
+   * `isNewUser` alone: docs/Authentication.md §3's account-linking rule
+   * means even a "Register" click can resolve to an existing account that
+   * still never finished the wizard, so `isNewUser` alone isn't a reliable
+   * signal for this decision. */
+  existingUserRedirectTo: string
+}
+
+/**
+ * "Continue with Google" (docs/Authentication.md §3) — real Firebase Google
+ * OAuth popup, verified by the real backend, per this session's Firebase
+ * Authentication step.
+ */
+export function GoogleLoginButton({ existingUserRedirectTo }: GoogleLoginButtonProps) {
+  const { t } = useTranslation('auth')
+  const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
+  const navigate = useNavigate()
+
+  async function handleClick() {
+    setLoading(true)
+    try {
+      const { user, accessToken } = await loginWithGoogle()
+      login(user, accessToken)
+      toast.success(t('google.welcome', { name: user.name }))
+      navigate(user.onboardingCompleted ? existingUserRedirectTo : ROUTES.onboarding, {
+        replace: true,
+      })
+    } catch (error) {
+      toast.error(t('google.signInFailed'), {
+        description: error instanceof Error ? error.message : t('google.pleaseTryAgain'),
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full"
+      loading={loading}
+      onClick={() => void handleClick()}
+    >
+      {!loading && <GoogleGlyph />}
+      {t('google.continueWithGoogle')}
+    </Button>
+  )
+}

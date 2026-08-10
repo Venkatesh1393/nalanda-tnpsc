@@ -1,0 +1,32 @@
+{
+  "overlay": {
+    "placeholder": "Search subjects, topics, lessons, questions, current affairs, live exams...",
+    "triggerLabel": "Search",
+    "groups": {
+      "subject": "Subjects",
+      "topic": "Topics",
+      "lesson": "Lessons",
+      "question": "Questions",
+      "current_affair": "Current Affairs",
+      "live_exam": "Live Exams"
+    },
+    "recentHeading": "Recent Searches",
+    "popularHeading": "Popular Searches",
+    "clearRecent": "Clear",
+    "noMatches": "No results for \"{{query}}\"",
+    "seeAllResults": "See all results for \"{{query}}\"",
+    "emptyState": "Type to search across the whole platform"
+  },
+  "resultsPage": {
+    "heading": "Search Results",
+    "subtitleWithCountOne": "{{count}} result for \"{{query}}\"",
+    "subtitleWithCountOther": "{{count}} results for \"{{query}}\"",
+    "filters": {
+      "allTypes": "All types",
+      "examCategory": "Exam"
+    },
+    "errorTitle": "Couldn't load search results",
+    "emptyTitle": "No results found",
+    "emptyDescription": "Try a different search term, or remove some filters."
+  }
+}

@@ -1,0 +1,28 @@
+# Sprint 4 Step 68 — Production Readiness. Root-level companion to each
+# app's own .gitignore (backend/, frontend/, admin/ all already ignore their
+# own node_modules/dist/.env correctly) — this one only needs to cover
+# things that can land at the repo root: this project has no `.git` yet, so
+# this is here ready for the first `git init`.
+
+node_modules/
+dist/
+dist-ssr/
+coverage/
+logs/
+*.log
+*.tsbuildinfo
+
+.env
+.env.local
+.env.*.local
+
+# A real per-developer docker-compose override (e.g. custom ports/volumes)
+# should never be committed — docker-compose.yml itself (the template) is.
+docker-compose.override.yml
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+.DS_Store
+Thumbs.db

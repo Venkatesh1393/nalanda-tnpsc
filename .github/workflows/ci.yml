@@ -1,0 +1,108 @@
+name: CI
+
+# Sprint 4 Step 68 — Production Readiness.
+#
+# Runs on every push/PR against main. Every job below is secret-free by
+# design: lint/typecheck/build never execute config/env.ts's runtime env
+# validation (that only runs when the compiled server actually starts, per
+# server.ts calling `connectDatabase()`/booting `createApp()` — a `tsc`
+# build never does), and the Docker builds only need real values for the
+# frontend/admin VITE_* build args, which this workflow deliberately leaves
+# blank (a blank build is exactly what a contributor's local `docker build`
+# without secrets produces too — this validates the *build*, not a
+# deployable image). This repository has no `.git` yet (see
+# docs/Deployment.md) — this file is ready the moment it does; nothing here
+# needs to change to start running.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend — lint, typecheck, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+  frontend:
+    name: Frontend — lint, typecheck, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+  admin:
+    name: Admin — lint, typecheck, build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: admin/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+  docker:
+    name: Docker — image builds
+    runs-on: ubuntu-latest
+    # Gated behind the three build jobs so a broken app never wastes time on
+    # a Docker build that would fail for the same underlying reason.
+    needs: [backend, frontend, admin]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          push: false
+          tags: nalanda-backend:ci
+      - name: Build frontend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: false
+          tags: nalanda-frontend:ci
+      - name: Build admin image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./admin
+          push: false
+          tags: nalanda-admin:ci

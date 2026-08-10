@@ -1,0 +1,45 @@
+{
+  "page": {
+    "heading": "AI Tutor",
+    "subtitle": "Ask about a lesson, a topic, a practice question, revision tips, or memory tricks — in English or Tamil.",
+    "dashboard": "Dashboard",
+    "premiumUnlockLabel": "Unlock Nalanda AI Tutor with Pro",
+    "loadErrorTitle": "Couldn't load AI Tutor",
+    "usageLabel": "{{used}}/{{limit}} messages today"
+  },
+  "sidebar": {
+    "newChat": "New Chat",
+    "searchPlaceholder": "Search chats...",
+    "pinnedHeading": "Pinned",
+    "historyHeading": "History",
+    "emptyTitle": "No conversations yet",
+    "emptyDescription": "Start a new chat to ask your first question.",
+    "noSearchResults": "No chats match \"{{query}}\"",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "delete": "Delete chat",
+    "conversationLimitToast": "You've reached your open-conversation limit — delete an old chat to start a new one."
+  },
+  "chat": {
+    "emptyTitle": "Ask Nalanda AI Tutor anything",
+    "emptyDescription": "Try one of these to get started, or type your own question.",
+    "starters": {
+      "explainLesson": "Explain the lesson on ",
+      "explainTopic": "Explain the topic: ",
+      "explainQuestion": "I'm stuck on this question: ",
+      "revisionTips": "Give me revision tips for ",
+      "memoryTricks": "Give me a memory trick to remember "
+    },
+    "askInTamil": "Ask in Tamil",
+    "askInEnglish": "Ask in English",
+    "inputPlaceholder": "Ask a question...",
+    "send": "Send",
+    "confidenceLow": "Not fully certain — verify important facts.",
+    "confidenceEscalated": "This looked outside TNPSC exam prep.",
+    "dailyLimitToast": "You've reached today's AI Tutor message limit. Try again tomorrow.",
+    "unavailableToast": "AI Tutor is temporarily unavailable. Please try again shortly.",
+    "contextBadgeLesson": "Grounded in this lesson",
+    "contextBadgeTopic": "Grounded in this topic",
+    "contextBadgeQuestion": "Grounded in this question"
+  }
+}

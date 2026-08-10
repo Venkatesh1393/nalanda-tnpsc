@@ -1,0 +1,23 @@
+{
+  // Tailwind v4's at-rules (@custom-variant, @theme, @apply) aren't part of
+  // standard CSS, so VS Code's built-in CSS validator flags them as unknown
+  // at-rules. They're valid — Tailwind's own build (vite build / npm run
+  // build) is the source of truth, not this generic linter.
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore",
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Lets Tailwind CSS IntelliSense autocomplete class strings inside
+  // class-variance-authority's cva(...) variant objects (used by every
+  // shadcn/ui component in src/components/ui), not just plain className.
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ]
+}

@@ -1,0 +1,145 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Same semantic design tokens as frontend/src/index.css (docs/UI_Design_System.md)
+  — trimmed to the admin/'s actual needs (no OTP/hero/marquee keyframes, no
+  Tamil font, no `--footer*`/`--ai-teal` tokens the Admin Panel never uses).
+  Keeps the Admin Panel visually consistent with the Student Web App's brand
+  (same Nalanda Indigo primary, same type scale) without pulling in
+  student-only tokens.
+*/
+
+:root {
+  --radius: 0.625rem;
+
+  --background: #ffffff;
+  --foreground: #1a1a22;
+  --card: #fafafc;
+  --card-foreground: #1a1a22;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a22;
+  --primary: #4a3fbf;
+  --primary-foreground: #ffffff;
+  --secondary: #f2f1f7;
+  --secondary-foreground: #1a1a22;
+  --muted: #f4f4f6;
+  --muted-foreground: #5c5a6e;
+  --accent: #edebfb;
+  --accent-foreground: #3b3486;
+  --destructive: #c4392b;
+  --destructive-foreground: #ffffff;
+  --border: #e4e3ec;
+  --input: #e4e3ec;
+  --ring: #4a3fbf;
+
+  --success: #1f9d55;
+  --success-foreground: #ffffff;
+  --warning: #b7791e;
+  --warning-foreground: #ffffff;
+
+  --sidebar: #fafafc;
+  --sidebar-foreground: #1a1a22;
+  --sidebar-primary: #4a3fbf;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #edebfb;
+  --sidebar-accent-foreground: #3b3486;
+  --sidebar-border: #e4e3ec;
+  --sidebar-ring: #4a3fbf;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+.dark {
+  --background: #121218;
+  --foreground: #f2f1f7;
+  --card: #1a1a22;
+  --card-foreground: #f2f1f7;
+  --popover: #22222c;
+  --popover-foreground: #f2f1f7;
+  --primary: #7a70e8;
+  --primary-foreground: #14141a;
+  --secondary: #22222c;
+  --secondary-foreground: #f2f1f7;
+  --muted: #1a1a22;
+  --muted-foreground: #a8a6b8;
+  --accent: #2e2e38;
+  --accent-foreground: #f2f1f7;
+  --destructive: #e0554a;
+  --destructive-foreground: #14141a;
+  --border: #2e2e38;
+  --input: #2e2e38;
+  --ring: #7a70e8;
+
+  --success: #34b76a;
+  --success-foreground: #14141a;
+  --warning: #cc9a3f;
+  --warning-foreground: #14141a;
+
+  --sidebar: #1a1a22;
+  --sidebar-foreground: #f2f1f7;
+  --sidebar-primary: #7a70e8;
+  --sidebar-primary-foreground: #14141a;
+  --sidebar-accent: #2e2e38;
+  --sidebar-accent-foreground: #f2f1f7;
+  --sidebar-border: #2e2e38;
+  --sidebar-ring: #7a70e8;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: var(--font-sans);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}

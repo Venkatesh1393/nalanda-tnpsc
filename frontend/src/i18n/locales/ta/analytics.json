@@ -1,0 +1,98 @@
+{
+  "analyticsPage": {
+    "heading": "பகுப்பாய்வு",
+    "subtitle": "உங்கள் செயல்திறன், முயற்சி மற்றும் நிலை — அனைத்தும் ஒரே இடத்தில்.",
+    "dashboardLink": "டாஷ்போர்டு",
+    "emptyState": {
+      "title": "இதுவரை பகுப்பாய்வு இல்லை",
+      "description": "உங்கள் செயல்திறன் பகுப்பாய்வைத் திறக்க பயிற்சி கேள்விகளை முடிக்கவும்.",
+      "actionLabel": "பயிற்சியைத் தொடங்கு"
+    }
+  },
+  "analyticsSummaryRow": {
+    "overallPercentile": {
+      "label": "மொத்த சதவீத தரம்",
+      "value": "{{value}}வது"
+    },
+    "overallAccuracy": {
+      "label": "மொத்த துல்லியம்",
+      "value": "{{value}}%"
+    },
+    "questionsAttempted": {
+      "label": "முயற்சி செய்யப்பட்ட கேள்விகள்"
+    },
+    "currentStreak": {
+      "label": "தற்போதைய தொடர்ச்சி",
+      "value": "{{value}} நாட்கள்"
+    }
+  },
+  "goalCompletionChart": {
+    "title": "இலக்கு நிறைவு",
+    "description": "{{exam}} நோக்கி",
+    "errorTitle": "இலக்கு நிறைவை ஏற்ற முடியவில்லை",
+    "completeLabel": "நிறைவு",
+    "daysUntil": "{{date}} வரை {{days}} நாட்கள்"
+  },
+  "monthlyProgressChart": {
+    "title": "மாதாந்திர முன்னேற்றம்",
+    "description": "கடந்த 6 மாதங்களில் ஒட்டுமொத்த தேர்வுத் தயார்நிலைப் போக்கு.",
+    "errorTitle": "மாதாந்திர முன்னேற்றத்தை ஏற்ற முடியவில்லை",
+    "summaryGained": "{{since}} முதல் {{gained}} புள்ளிகள் உயர்ந்துள்ளது — தற்போது {{percent}}% ஆக உள்ளது.",
+    "summarySteady": "{{since}} முதல் நிலையாக உள்ளது — தற்போது {{percent}}% ஆக உள்ளது."
+  },
+  "practiceHistoryChart": {
+    "title": "பயிற்சி வரலாறு",
+    "description": "ஒரு அமர்வுக்கான மதிப்பெண், சமீபத்திய 8 அமர்வுகள்.",
+    "errorTitle": "பயிற்சி வரலாற்றை ஏற்ற முடியவில்லை",
+    "tooltipScore": "{{value}}% மதிப்பெண்",
+    "scoreSeriesName": "மதிப்பெண்"
+  },
+  "speedAnalysisChart": {
+    "title": "வேக பகுப்பாய்வு",
+    "description": "ஒரு கேள்விக்கான உங்கள் சராசரி நேரம், குழு அளவுகோலுடன் ஒப்பிடும்போது.",
+    "errorTitle": "வேக பகுப்பாய்வை ஏற்ற முடியவில்லை",
+    "yourLabel": "நீங்கள்",
+    "cohortLabel": "குழு சராசரி"
+  },
+  "strongAreasChart": {
+    "title": "வலிமையான பகுதிகள்",
+    "description": "தற்போது அதிக துல்லியம் கொண்ட உங்கள் 5 தலைப்புகள்.",
+    "errorTitle": "வலிமையான பகுதிகளை ஏற்ற முடியவில்லை",
+    "accuracyLabel": "துல்லியம்"
+  },
+  "subjectAccuracyChart": {
+    "title": "பாட துல்லியம்",
+    "description": "உங்கள் தற்போதைய தேர்வு இலக்கின் அடிப்படையில் பலவீனத்திலிருந்து வலிமைக்கு வரிசைப்படுத்தப்பட்டது.",
+    "errorTitle": "பாட துல்லியத்தை ஏற்ற முடியவில்லை",
+    "accuracyLabel": "துல்லியம்"
+  },
+  "weakAreasChart": {
+    "title": "பலவீனமான பகுதிகள்",
+    "description": "தற்போது குறைந்த துல்லியம் கொண்ட உங்கள் 5 தலைப்புகள்.",
+    "errorTitle": "பலவீனமான பகுதிகளை ஏற்ற முடியவில்லை",
+    "accuracyLabel": "துல்லியம்",
+    "studyButton": "{{topic}} படிக்கவும்"
+  },
+  "weeklyStudyTimeChart": {
+    "title": "வாராந்திர படிப்பு நேரம்",
+    "description": "ஒரு நாளுக்குப் படித்த நிமிடங்கள், கடந்த 7 நாட்கள்.",
+    "errorTitle": "படிப்பு நேரத்தை ஏற்ற முடியவில்லை",
+    "summary": "மொத்தம் {{hours}} மணி {{minutes}} நிமிடம் — கடந்த 7 நாட்களில் {{daysActive}} நாட்கள் செயலில் இருந்தீர்கள்.",
+    "minutesLabel": "நிமிடங்கள்"
+  },
+  "rankPredictionChart": {
+    "title": "தரவரிசை கணிப்பு",
+    "description": "மற்ற விண்ணப்பதாரர்களுடன் ஒப்பிடும்போது நீங்கள் எங்கு நிற்கிறீர்கள்.",
+    "errorTitle": "தரவரிசை கணிப்பை ஏற்ற முடியவில்லை",
+    "percentileLabel": "{{value}}வது சதவீதம்",
+    "rankOf": "— {{cohort}} விண்ணப்பதாரர்களில் தரவரிசை #{{rank}}.",
+    "smallCohortNote": "ஒரு சிறிய குழு விண்ணப்பதாரர்களின் அடிப்படையில் — இதை ஒரு தோராயமான மதிப்பீடாகக் கருதவும்.",
+    "youLabel": "நீங்கள்"
+  },
+  "questionDifficultyChart": {
+    "title": "கேள்வி கடினத்தன்மை",
+    "description": "போதுமான முயற்சிகள் இருக்கும் இடங்களில், கடினத்தன்மை நிலை வாரியான துல்லியம்.",
+    "errorTitle": "கடினத்தன்மை பகுப்பாய்வை ஏற்ற முடியவில்லை",
+    "accuracyLabel": "துல்லியம்"
+  }
+}

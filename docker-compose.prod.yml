@@ -1,0 +1,58 @@
+# Sprint 4 Step 69 — Production Deployment.
+#
+# An override, not a standalone file — layers on top of docker-compose.yml
+# for a real single-host production deployment with TLS:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# What it changes: removes direct host-port publishing from backend/
+# frontend/admin (they become reachable only from other containers on this
+# compose network, by service name — exactly what nginx/gateway.conf's
+# `proxy_pass http://backend:5000` etc. rely on) and adds the `gateway`
+# (nginx/gateway.conf, terminates TLS, the only container publishing 80/443)
+# and `certbot` (issues/renews the Let's Encrypt certificates gateway reads)
+# services. Nothing here overrides `env_file`/`build.args` — those still
+# come from docker-compose.yml and real secrets the host operator supplies,
+# never from this file.
+services:
+  backend:
+    ports: []
+
+  frontend:
+    ports: []
+
+  admin:
+    ports: []
+
+  gateway:
+    image: nginx:1.27-alpine
+    depends_on:
+      - backend
+      - frontend
+      - admin
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/gateway.conf:/etc/nginx/conf.d/gateway.conf:ro
+      - ./nginx/snippets:/etc/nginx/snippets:ro
+      - certbot-webroot:/var/www/certbot:ro
+      - certbot-certs:/etc/letsencrypt:ro
+    restart: unless-stopped
+
+  # One-shot-per-run cert renewal — `docker compose -f ... -f ... run --rm
+  # certbot certonly --webroot -w /var/www/certbot -d app.nalanda-tnpsc.com
+  # -d admin.nalanda-tnpsc.com -d api.nalanda-tnpsc.com` for first issuance;
+  # cron/systemd-timer the same command with `renew` on the host for
+  # ongoing renewal (Let's Encrypt certs are 90-day) — see
+  # docs/Deployment.md §7.4 for the exact one-time setup sequence.
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot-webroot:/var/www/certbot
+      - certbot-certs:/etc/letsencrypt
+    entrypoint: 'true' # never auto-runs — invoked manually via `compose run`
+
+volumes:
+  certbot-webroot:
+  certbot-certs:

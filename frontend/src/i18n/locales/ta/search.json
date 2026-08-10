@@ -1,0 +1,32 @@
+{
+  "overlay": {
+    "placeholder": "பாடங்கள், தலைப்புகள், வீடியோ பாடங்கள், கேள்விகள், நடப்பு நிகழ்வுகள், நேரடி தேர்வுகளைத் தேடுங்கள்...",
+    "triggerLabel": "தேடு",
+    "groups": {
+      "subject": "பாடங்கள்",
+      "topic": "தலைப்புகள்",
+      "lesson": "வீடியோ பாடங்கள்",
+      "question": "கேள்விகள்",
+      "current_affair": "நடப்பு நிகழ்வுகள்",
+      "live_exam": "நேரடி தேர்வுகள்"
+    },
+    "recentHeading": "சமீபத்திய தேடல்கள்",
+    "popularHeading": "பிரபலமான தேடல்கள்",
+    "clearRecent": "அழி",
+    "noMatches": "\"{{query}}\"-க்கு முடிவுகள் இல்லை",
+    "seeAllResults": "\"{{query}}\"-க்கான அனைத்து முடிவுகளையும் காண்க",
+    "emptyState": "தளம் முழுவதும் தேட தட்டச்சு செய்யுங்கள்"
+  },
+  "resultsPage": {
+    "heading": "தேடல் முடிவுகள்",
+    "subtitleWithCountOne": "\"{{query}}\"-க்கு {{count}} முடிவு",
+    "subtitleWithCountOther": "\"{{query}}\"-க்கு {{count}} முடிவுகள்",
+    "filters": {
+      "allTypes": "அனைத்து வகைகளும்",
+      "examCategory": "தேர்வு"
+    },
+    "errorTitle": "தேடல் முடிவுகளை ஏற்ற முடியவில்லை",
+    "emptyTitle": "முடிவுகள் இல்லை",
+    "emptyDescription": "வேறு தேடல் சொல்லை முயற்சிக்கவும், அல்லது சில வடிப்பான்களை அகற்றவும்."
+  }
+}

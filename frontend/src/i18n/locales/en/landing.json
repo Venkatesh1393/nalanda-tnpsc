@@ -1,0 +1,148 @@
+{
+  "hero": {
+    "badge": "AI-Powered TNPSC Preparation",
+    "title": "Your AI-guided path to clearing TNPSC — in Tamil or English.",
+    "subtitle": "Structured content, adaptive practice, and a personal AI study plan for Group 1 to Group 4, VAO, Police, Forest, and TRB — built for every aspirant, priced for every aspirant.",
+    "startFree": "Start Preparing Free",
+    "seeHowItWorks": "See How It Works",
+    "trustedBy": "Trusted by {{count}}+ aspirants preparing with Nalanda",
+    "floatingIcons": {
+      "aiExplanation": "AI Explanation",
+      "studyPlan": "Study Plan",
+      "currentAffairsSummary": "Current Affairs Summary",
+      "mainsEvaluation": "Mains Evaluation"
+    }
+  },
+  "featureCards": {
+    "title": "Everything you need, in one place",
+    "subtitle": "Built around how TNPSC aspirants actually study — not a generic multi-exam catalog.",
+    "exploreAll": "Explore All Features",
+    "aiTutor": {
+      "title": "AI Tutor",
+      "description": "Instant doubt resolution and personalized explanations, in Tamil or English."
+    },
+    "smartPractice": {
+      "title": "Smart Practice",
+      "description": "Adaptive difficulty and topic-wise quizzes that get smarter as you practice."
+    },
+    "weeklyLiveExam": {
+      "title": "Weekly Live Exam",
+      "description": "A scheduled, cohort-wide mock exam every week — compete with thousands of aspirants in real time."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "Percentile, rank, and weak-area detection — know exactly where you stand."
+    },
+    "community": {
+      "title": "Community",
+      "description": "A moderated doubt forum and peer discussion — you're not preparing alone."
+    },
+    "studyPlanner": {
+      "title": "Study Planner",
+      "description": "An AI-generated daily plan built around your life, not a generic syllabus."
+    }
+  },
+  "statsBand": {
+    "errorTitle": "Couldn't load platform stats",
+    "questionsCount": "Questions in the Bank",
+    "currentAffairsDaysCount": "Days of Current Affairs Covered",
+    "mockTestsCount": "Mock Tests Available",
+    "studentsCount": "Aspirants Preparing With Nalanda"
+  },
+  "currentAffairsPreview": {
+    "title": "Daily Current Affairs",
+    "subtitle": "Fresh, TNPSC-relevance-tagged — updated every day.",
+    "errorTitle": "Couldn't load today's current affairs",
+    "today": "Today",
+    "seeFullButton": "See Full Current Affairs",
+    "scrollableAriaLabel": "Today's current affairs, scrollable on mobile"
+  },
+  "topRankers": {
+    "title": "Top Rankers",
+    "subtitle": "Real aspirants, real results — across every exam category.",
+    "errorTitle": "Couldn't load top rankers",
+    "percentile": "percentile",
+    "viewFullLeaderboard": "View Full Leaderboard",
+    "scrollableAriaLabel": "Top rankers, scrollable on mobile"
+  },
+  "successStories": {
+    "title": "Success Stories",
+    "subtitle": "Real aspirants, specific outcomes — see yourself in one of these.",
+    "errorTitle": "Couldn't load success stories",
+    "startYourStory": "Start your own story",
+    "readMore": "Read More Success Stories",
+    "clearedPrefix": "cleared"
+  },
+  "pricing": {
+    "title": "Simple, transparent pricing",
+    "subtitle": "No \"contact us for a quote.\" Every plan, every price, up front.",
+    "errorTitle": "Couldn't load pricing plans",
+    "monthly": "Monthly",
+    "annual": "Annual",
+    "perMonth": "mo",
+    "perYear": "yr",
+    "custom": "Custom",
+    "free": "Free",
+    "talkToSales": "Talk to Sales",
+    "getStartedFree": "Get Started Free",
+    "upgradeTo": "Upgrade to {{tier}}",
+    "scrollableAriaLabel": "Pricing plans, scrollable on mobile",
+    "tiers": {
+      "free": "Free",
+      "plus": "Plus",
+      "pro": "Pro",
+      "institutional": "Institutional"
+    }
+  },
+  "testimonials": {
+    "title": "What aspirants are saying",
+    "errorTitle": "Couldn't load testimonials",
+    "play": "Play",
+    "pause": "Pause",
+    "scrolling": "scrolling"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "stillHaveQuestions": "Still have questions?",
+    "contactSupport": "Contact Support",
+    "gettingStarted": {
+      "title": "Getting Started",
+      "q1": "Do I need an account to see any content?",
+      "a1": "No — today's Current Affairs preview and full Pricing are public. Most content (Learn, Practice, Analytics) needs a free account, per the platform's public/authenticated content split.",
+      "q2": "How do I sign up — do I need to create a password?",
+      "a2": "No password, ever, for an individual account. Sign up with Google or a 6-digit email OTP — Nalanda is fully passwordless by design.",
+      "q3": "Which exams does Nalanda cover?",
+      "a3": "Group 1, Group 2, Group 2A, Group 4, VAO, Police, Forest, and TRB — with more depth added exam-by-exam as the platform grows."
+    },
+    "pricingPlans": {
+      "title": "Pricing & Plans",
+      "q1": "Is the Free plan actually free, or a time-limited trial?",
+      "a1": "Genuinely free, indefinitely — not a trial. It's deliberately usable on its own, with Plus and Pro adding depth (unlimited practice, AI mains evaluation) rather than gating the basics.",
+      "q2": "Can I cancel or switch plans anytime?",
+      "a2": "Yes — cancel anytime from your account; you keep access until the end of your current billing period, standard SaaS practice.",
+      "q3": "Do you offer pricing for coaching centers or institutions?",
+      "a3": "Yes — the Institutional tier covers bulk licensing and cohort-level analytics for coaching centers and study centers. Talk to Sales for seat-based pricing."
+    },
+    "contentLanguage": {
+      "title": "Content & Language",
+      "q1": "Is everything really available in Tamil, not just English with subtitles?",
+      "a1": "Yes — Tamil is a first-class citizen throughout the product, typeset with the same care and weight as English everywhere, never a smaller afterthought translation.",
+      "q2": "How current is the Current Affairs content?",
+      "a2": "Updated daily and tagged by TNPSC exam relevance, so you're not wading through generic news to find what actually matters for your exam."
+    },
+    "aiFeatures": {
+      "title": "AI Features",
+      "q1": "How does the AI Tutor actually work?",
+      "a1": "It answers syllabus questions instantly in Tamil or English. When its confidence is low, it says so honestly and offers to escalate your question to the community instead of guessing.",
+      "q2": "Is AI Mains answer evaluation available on every plan?",
+      "a2": "It's a Pro-tier feature — evaluates structure, relevance, coverage, and language against a rubric, with actionable feedback rather than just a score."
+    },
+    "privacyData": {
+      "title": "Privacy & Data",
+      "q1": "How is my data protected?",
+      "a1": "All traffic is encrypted over HTTPS, identity is handled by Firebase Authentication, and Nalanda never stores your card details directly — payments are delegated entirely to Razorpay.",
+      "q2": "Can I export or delete my data?",
+      "a2": "Yes — both are supported directly from your account, in line with India's DPDP Act data rights."
+    }
+  }
+}

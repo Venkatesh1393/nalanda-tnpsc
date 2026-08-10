@@ -1,0 +1,102 @@
+{
+  "wizard": {
+    "loadingProgress": "Loading your progress",
+    "couldNotSaveTitle": "Could not save your study plan",
+    "couldNotSaveDescription": "Please check your connection and try again.",
+    "back": "Back",
+    "continueButton": "Continue",
+    "stepLabels": {
+      "language": "Language",
+      "exam": "Target exam",
+      "target-month": "Target month",
+      "study-hours": "Study hours",
+      "weak-subjects": "Weak subjects",
+      "learning-style": "Learning style",
+      "generate-plan": "Your study plan",
+      "completion": "All set"
+    }
+  },
+  "stepProgress": {
+    "stepOf": "Step {{current}} of {{total}}",
+    "ariaLabel": "Onboarding progress — step {{current}} of {{total}}: {{label}}"
+  },
+  "language": {
+    "heading": "Choose your language",
+    "subtitle": "You can change this anytime from Settings.",
+    "ariaLabel": "Preferred language",
+    "options": {
+      "ta": "தமிழ்",
+      "en": "English",
+      "bilingual": "Both / Bilingual"
+    }
+  },
+  "exam": {
+    "heading": "Which exam are you preparing for?",
+    "subtitle": "Select as many as apply — we'll help you focus.",
+    "ariaLabel": "Target TNPSC exams",
+    "manyExamsNote": "Preparing for many exams at once? We'll help you focus one at a time on your Dashboard."
+  },
+  "targetMonth": {
+    "heading": "When are you aiming to take the exam?",
+    "subtitle": "This helps us pace your study plan.",
+    "ariaLabel": "Target exam month",
+    "notSure": "I'm not sure yet",
+    "notSureNote": "No problem — we'll set a flexible pace and adjust once your exam is officially announced."
+  },
+  "studyHours": {
+    "heading": "How much time can you study daily?",
+    "subtitle": "A realistic estimate — you can adjust this later.",
+    "ariaLabel": "Daily study hours",
+    "bands": {
+      "under-1": "Less than 1 hour",
+      "1-2": "1–2 hours",
+      "2-4": "2–4 hours",
+      "4-plus": "4+ hours"
+    }
+  },
+  "weakSubjects": {
+    "heading": "Which of these do you find hardest?",
+    "subtitle": "Optional — pick none if you're not sure yet, we'll find out as you practice.",
+    "ariaLabel": "Weak subjects",
+    "subjects": {
+      "Tamil": "Tamil",
+      "General English": "General English",
+      "General Science": "General Science",
+      "General Studies": "General Studies",
+      "Aptitude & Mental Ability": "Aptitude & Mental Ability",
+      "Current Affairs": "Current Affairs",
+      "Education & Psychology": "Education & Psychology",
+      "Subject Pedagogy": "Subject Pedagogy"
+    }
+  },
+  "learningStyle": {
+    "heading": "How do you like to learn?",
+    "subtitle": "We'll lead with this format wherever possible.",
+    "ariaLabel": "Preferred learning style",
+    "styles": {
+      "video": { "title": "Video lessons", "description": "Short videos before anything else." },
+      "notes": { "title": "Reading & notes", "description": "Dense notes and one-liners." },
+      "practice": { "title": "Practice-first", "description": "Learn by attempting questions." },
+      "mixed": { "title": "A mix of everything", "description": "No strong preference either way." }
+    }
+  },
+  "generatePlan": {
+    "statusMessages": {
+      "understanding": "Understanding your goal…",
+      "mapping": "Mapping your syllabus…",
+      "balancing": "Balancing your weak subjects…",
+      "finalizing": "Finalizing your first week…"
+    },
+    "failedTitle": "We couldn't build your plan just now",
+    "failedDescription": "You can start with a general syllabus instead — we'll personalize it as soon as we can.",
+    "continueWithGeneral": "Continue with General Plan",
+    "tryAgain": "Try Again",
+    "buildingTitle": "Building your personalized plan…"
+  },
+  "completion": {
+    "allSet": "You're all set!",
+    "planReadyFor": "Your personalized plan for {{exam}} is ready.",
+    "planReady": "Your personalized study plan is ready.",
+    "goToDashboard": "Go to Dashboard"
+  }
+}

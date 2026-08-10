@@ -1,0 +1,114 @@
+{
+  "page": {
+    "heading": "Weekly Live Exam",
+    "subtitle": "Scheduled, cohort-wide mock exams — real exam pressure, real timing.",
+    "unknownTabTitle": "Unknown tab",
+    "unknownTabDescription": "That Live Exams tab doesn't exist.",
+    "backToDashboard": "Back to Dashboard"
+  },
+  "tabs": {
+    "upcoming": "Upcoming",
+    "live": "Live",
+    "completed": "Completed",
+    "myAttempts": "My Attempts"
+  },
+  "examList": {
+    "errorTitle": "Couldn't load Live Exams",
+    "emptyDescription": "Check back soon — new Live Exams are scheduled regularly.",
+    "emptyTitle": {
+      "upcoming": "No upcoming exams",
+      "live": "No live exams",
+      "completed": "No completed exams"
+    }
+  },
+  "myAttempts": {
+    "errorTitle": "Couldn't load your attempts",
+    "emptyTitle": "No attempts yet",
+    "emptyDescription": "Join a live exam to see your attempts here.",
+    "browseUpcoming": "Browse Upcoming"
+  },
+  "detail": {
+    "errorTitle": "Couldn't load this live exam",
+    "notFoundTitle": "Live exam not found",
+    "backToLiveExams": "Back to Live Exams",
+    "startExam": "Start Exam",
+    "resumeExam": "Resume Exam",
+    "viewResult": "View Result",
+    "scheduled": "Scheduled",
+    "liveNow": "Live Now",
+    "duration": "Duration",
+    "durationValue": "{{minutes}} min",
+    "questions": "Questions",
+    "totalMarks": "Total Marks",
+    "negativeMarking": "Negative Marking",
+    "negativeMarkingValue": "-{{marks}} / wrong answer",
+    "negativeMarkingNone": "None",
+    "instructions": "Instructions",
+    "cancelled": "This live exam has been cancelled.",
+    "upcomingNote": "Joining opens the moment this exam goes live — come back at the scheduled time.",
+    "windowClosed": "This exam window has closed.",
+    "premiumUnlock": "Live Exams are a Plus feature — upgrade to join scheduled, cohort-wide mock exams.",
+    "joinErrorTitle": "Cannot start this exam",
+    "joinErrorFallback": "This exam is not currently joinable.",
+    "joinErrorGeneric": "Something went wrong starting this exam."
+  },
+  "session": {
+    "errorTitle": "Couldn't load this live exam",
+    "label": "Live Exam",
+    "questionOf": "Question {{current}} of {{total}}",
+    "progressAriaLabel": "Exam progress",
+    "previous": "Previous",
+    "next": "Next",
+    "submitExam": "Submit Exam",
+    "answeredCount": "{{answered}} of {{total}} answered",
+    "timeUpToast": "Time's up — your exam has been submitted."
+  },
+  "result": {
+    "errorTitle": "Couldn't load your result",
+    "notPublishedTitle": "Result Not Published Yet",
+    "notPublishedDescription": "Results are published to everyone at once, once the exam window fully closes — available from {{date}}.",
+    "backToMyAttempts": "Back to My Attempts",
+    "heading": "Your Result",
+    "accuracy": "Accuracy",
+    "correctOfTotal": "{{correct}} of {{total}} correct · {{time}}",
+    "timeTaken": "{{minutes}}m {{seconds}}s",
+    "score": "Score",
+    "review": "Review",
+    "noQuestionsToReview": "No questions to review",
+    "questionNumber": "Question {{number}}",
+    "stats": {
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "unanswered": "Unanswered"
+    },
+    "questionStatus": {
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "skipped": "Skipped"
+    }
+  },
+  "myAttemptCard": {
+    "started": "Started {{date}}",
+    "submitted": "Submitted {{date}}",
+    "inProgress": "In Progress",
+    "resultPending": "Result pending"
+  },
+  "questionPanel": {
+    "markForReview": "Mark for Review",
+    "markedForReview": "Marked for Review"
+  },
+  "countdown": {
+    "daysHoursMinutes": "{{days}}d {{hours}}h {{minutes}}m"
+  },
+  "liveExamCard": {
+    "status": {
+      "upcoming": "Upcoming",
+      "live": "Live Now",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "questionsMarks": "{{questions}} Qs · {{marks}} Marks",
+    "attempted": "Attempted",
+    "inProgress": "In Progress"
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "shared": {
+    "backToDashboard": "டாஷ்போர்டுக்குச் செல்",
+    "tnpscYear": "TNPSC — {{year}}",
+    "questionOf": "கேள்வி {{current}} / {{total}}",
+    "outcome": {
+      "correct": "சரி",
+      "incorrect": "தவறு",
+      "skipped": "தவிர்க்கப்பட்டது"
+    }
+  },
+  "modeMeta": {
+    "quiz": {
+      "title": "தலைப்பு வினாடி வினா",
+      "description": "ஒரு தலைப்பில் கவனம் செலுத்தும் வினாடி வினா, உங்கள் வேகத்திற்கு ஏற்ப வடிவமைக்கப்பட்டது — மென்மையான டைமர், தேர்வு அழுத்தம் இல்லை."
+    },
+    "hundredQuestions": {
+      "title": "100 கேள்விகள்",
+      "description": "நாளந்தாவின் சிறப்பு முழு பாடத்திட்டப் பயிற்சித் தொகுப்பு, உங்கள் பலவீனமான பகுதிகளுக்கு முன்னுரிமை அளிக்கிறது."
+    },
+    "sectional": {
+      "title": "பிரிவு தேர்வு",
+      "description": "ஒரு பாடத்தை உள்ளடக்கிய நிலையான-நேரத் தேர்வு, உண்மையான தேர்வு நிலைமைகளுக்கு ஏற்ப."
+    },
+    "mock": {
+      "title": "மாதிரி தேர்வு",
+      "description": "உண்மையான TNPSC தேர்வைப் பிரதிபலிக்கும் முழு அளவிலான, நிலையான-நேர மாதிரி தேர்வு."
+    },
+    "pyq": {
+      "title": "முந்தைய ஆண்டு வினாக்கள்",
+      "description": "கடந்த TNPSC தேர்வின் உண்மையான கேள்விகளை, ஆண்டு வாரியாக வடிகட்டிப் பயிற்சி செய்யுங்கள்."
+    }
+  },
+  "modePickerPage": {
+    "unknownModeTitle": "தெரியாத பயிற்சி முறை",
+    "unknownModeDescription": "அந்தப் பயிற்சி முறை இல்லை."
+  },
+  "modeConfigForm": {
+    "subjectLabel": "பாடம்",
+    "subjectRequiredLabel": "பாடம் *",
+    "topicRequiredLabel": "தலைப்பு *",
+    "chooseSubjectPlaceholder": "ஒரு பாடத்தைத் தேர்ந்தெடுக்கவும்",
+    "chooseSubjectOptionalPlaceholder": "ஒரு பாடத்தைத் தேர்ந்தெடுக்கவும் (விருப்பத்தேர்வு)",
+    "chooseTopicPlaceholder": "ஒரு தலைப்பைத் தேர்ந்தெடுக்கவும்",
+    "numberOfQuestionsLabel": "கேள்விகளின் எண்ணிக்கை",
+    "difficultyLabel": "கடினத்தன்மை",
+    "difficultyAll": "அனைத்தும்",
+    "yearLabel": "ஆண்டு",
+    "startButton": "{{modeTitle}} தொடங்கவும்"
+  },
+  "practiceHistoryPage": {
+    "heading": "பயிற்சி வரலாறு",
+    "errorTitle": "உங்கள் பயிற்சி வரலாற்றை ஏற்ற முடியவில்லை",
+    "emptyTitle": "இதுவரை பயிற்சி அமர்வுகள் இல்லை",
+    "emptyDescription": "இங்கே காண, ஒரு தலைப்பு வினாடி வினாவை முடிக்கவும்.",
+    "startPracticing": "பயிற்சியைத் தொடங்கவும்",
+    "correctCount": "{{correct}}/{{total}} சரி"
+  },
+  "practiceSessionPage": {
+    "sessionProgressAriaLabel": "அமர்வு முன்னேற்றம்",
+    "submitTest": "தேர்வைச் சமர்ப்பிக்கவும்",
+    "answeredOfTotal": "{{total}}-இல் {{answered}} பதிலளிக்கப்பட்டது",
+    "errorTitle": "இந்தப் பயிற்சி அமர்வை ஏற்ற முடியவில்லை",
+    "notFoundTitle": "இந்தப் பயிற்சி அமர்வு கிடைக்கவில்லை",
+    "timesUpToast": "நேரம் முடிந்தது — உங்கள் தேர்வு சமர்ப்பிக்கப்பட்டது."
+  },
+  "practiceReviewPage": {
+    "heading": "மறுபார்வை",
+    "errorTitle": "இந்த மறுபார்வையை ஏற்ற முடியவில்லை",
+    "emptyTitle": "மறுபார்வை செய்ய இன்னும் எதுவும் இல்லை",
+    "emptyDescription": "முதலில் ஒரு பயிற்சி அமர்வைச் சமர்ப்பிக்கவும் — பிறகு அது இங்கே தோன்றும்.",
+    "bookmarkForRevision": "மறுபடிப்புக்குப் புத்தகக்குறி இடவும்",
+    "backToSummary": "சுருக்கத்திற்குத் திரும்பு"
+  },
+  "practiceSummaryPage": {
+    "summaryHeading": "{{modeTitle}} சுருக்கம்",
+    "practiceFallback": "பயிற்சி",
+    "submittedSubtitle": "தேர்வு வெற்றிகரமாகச் சமர்ப்பிக்கப்பட்டது — நீங்கள் எப்படிச் செய்தீர்கள் என்பது இதோ.",
+    "performance": {
+      "excellent": "சிறப்பானது",
+      "good": "நன்று",
+      "fair": "சராசரி",
+      "needsImprovement": "மேம்பாடு தேவை"
+    },
+    "errorTitle": "உங்கள் முடிவுகளை ஏற்ற முடியவில்லை",
+    "emptyTitle": "இன்னும் முடிவுகள் இல்லை",
+    "emptyDescription": "இந்த அமர்வு இன்னும் சமர்ப்பிக்கப்படவில்லை.",
+    "reviewAnswers": "பதில்களை மறுபார்வையிடவும்",
+    "practiceAgain": "மீண்டும் பயிற்சி செய்யவும்",
+    "goToAnalytics": "பகுப்பாய்வுக்குச் செல்",
+    "practiceHistory": "பயிற்சி வரலாறு"
+  },
+  "achievementUnlockBanner": {
+    "title_one": "புதிய சாதனை திறக்கப்பட்டது!",
+    "title_other": "புதிய சாதனைகள் திறக்கப்பட்டன!"
+  },
+  "achievements": {
+    "first-100-questions": {
+      "title": "முதல் 100 கேள்விகள் முடிக்கப்பட்டன",
+      "description": "ஒரு முழு 100 கேள்விகள் தொகுப்பை முடித்தீர்கள்"
+    },
+    "seven-day-streak": {
+      "title": "7-நாள் பயிற்சி தொடர்ச்சி",
+      "description": "தொடர்ந்து 7 நாட்கள் பயிற்சி செய்தீர்கள்"
+    },
+    "first-mock-completed": {
+      "title": "முதல் மாதிரி தேர்வு முடிக்கப்பட்டது",
+      "description": "உங்கள் முதல் முழு மாதிரி தேர்வை முடித்தீர்கள்"
+    },
+    "pyq-completionist": {
+      "title": "PYQ முழுமையாக்கியவர்",
+      "description": "முந்தைய ஆண்டு வினாக்கள் தொகுப்பொன்றை முடித்தீர்கள்"
+    },
+    "comeback": {
+      "title": "மீள்வருகை",
+      "description": "இடைவெளிக்குப் பிறகு பயிற்சிக்குத் திரும்பினீர்கள்"
+    },
+    "first-practice": {
+      "title": "முதல் பயிற்சி",
+      "description": "உங்கள் முதல் பயிற்சி அமர்வை முடித்தீர்கள்"
+    },
+    "hundred-questions": {
+      "title": "100 கேள்விகள்",
+      "description": "அனைத்து பயிற்சி அமர்வுகளிலும் 100 கேள்விகளுக்கு பதிலளித்தீர்கள்"
+    },
+    "five-hundred-questions": {
+      "title": "500 கேள்விகள்",
+      "description": "அனைத்து பயிற்சி அமர்வுகளிலும் 500 கேள்விகளுக்கு பதிலளித்தீர்கள்"
+    },
+    "thousand-questions": {
+      "title": "1000 கேள்விகள்",
+      "description": "அனைத்து பயிற்சி அமர்வுகளிலும் 1000 கேள்விகளுக்கு பதிலளித்தீர்கள்"
+    },
+    "thirty-day-streak": {
+      "title": "30-நாள் தொடர்ச்சி",
+      "description": "தொடர்ந்து 30 நாட்கள் படித்தீர்கள்"
+    },
+    "perfect-score": {
+      "title": "முழு மதிப்பெண்",
+      "description": "ஒரு பயிற்சி அமர்வில் 100% துல்லியம் பெற்றீர்கள்"
+    },
+    "fast-learner": {
+      "title": "விரைவு கற்பவர்",
+      "description": "ஒரே நாளில் 5 பாடங்களை முடித்தீர்கள்"
+    }
+  },
+  "practiceSummaryCard": {
+    "accuracyLabel": "துல்லியம்",
+    "scoreSummary": "{{total}}-இல் {{correct}} சரி · {{time}}",
+    "timeFormat": "{{minutes}} நிமி {{seconds}} விநா",
+    "xpAwarded": "+{{xp}} XP",
+    "coinsAwarded": "+{{coins}} நாணயங்கள்"
+  },
+  "questionPalette": {
+    "groupAriaLabel": "கேள்வி வழிசெலுத்தி",
+    "itemAriaLabel": "கேள்வி {{number}}",
+    "itemAriaLabelCurrent": "கேள்வி {{number}}, தற்போதையது"
+  },
+  "questionTimer": {
+    "timeElapsed": "கடந்த நேரம்",
+    "timeRemaining": "மீதமுள்ள நேரம்"
+  },
+  "aiExplanationPanel": {
+    "standardExplanationTitle": "நிலையான விளக்கம்",
+    "aiExplanationTitle": "AI விளக்கம்",
+    "acknowledgementCorrect": "நீங்கள் \"{{selected}}\" என்பதைத் தேர்ந்தெடுத்தீர்கள் — அது சரி.",
+    "acknowledgementIncorrect": "நீங்கள் \"{{selected}}\" என்பதைத் தேர்ந்தெடுத்தீர்கள். சரியான பதில் \"{{correct}}\".",
+    "acknowledgementUnanswered": "நீங்கள் எந்தப் பதிலையும் தேர்ந்தெடுக்கவில்லை. சரியான பதில் \"{{correct}}\".",
+    "teaserBody": "இந்தக் கேள்விக்கான தனிப்பயனாக்கப்பட்ட, படிப்படியான AI விளக்கத்தைப் பெறுங்கள்.",
+    "getExplanationButton": "AI விளக்கத்தைப் பெறுங்கள்",
+    "whyCorrectTitle": "இது ஏன் சரியானது",
+    "whyYoursWrongTitle": "உங்கள் பதில் ஏன் தவறானது",
+    "keyConceptTitle": "முக்கிய கருத்து",
+    "memoryTrickTitle": "நினைவக யுக்தி",
+    "examRelevanceTitle": "TNPSC தேர்வு தொடர்பு",
+    "askFollowUpButton": "தொடர் கேள்வி கேட்கவும்",
+    "followUpToast": "தொடர் அரட்டை எதிர்கால கட்டத்தில் வரவுள்ளது — சற்று காத்திருங்கள்!",
+    "notAvailableForModeBody": "தலைப்பு வினாடி வினா அமர்வுகளுக்கு தற்போது AI விளக்கம் கிடைக்கிறது — மேலே உள்ள நிலையான விளக்கம் இந்தக் கேள்விக்கு போதுமானது.",
+    "quotaReachedTitle": "இன்றைய AI விளக்க வரம்பை எட்டிவிட்டீர்கள்",
+    "quotaReachedBody": "மேலே உள்ள நிலையான விளக்கம் இன்னும் கிடைக்கும். உங்கள் AI விளக்க வரம்பு நாளை புதுப்பிக்கப்படும்.",
+    "quotaReachedToast": "இன்றைய AI விளக்க வரம்பை எட்டிவிட்டீர்கள் — நிலையான விளக்கம் இன்னும் கிடைக்கும்.",
+    "unavailableTitle": "AI விளக்கம் தற்காலிகமாகக் கிடைக்கவில்லை",
+    "unavailableBody": "மேலே உள்ள நிலையான விளக்கம் இன்னும் இந்தக் கேள்விக்கு போதுமானது. சிறிது நேரத்தில் மீண்டும் முயற்சிக்கவும்.",
+    "retryButton": "மீண்டும் முயற்சிக்கவும்",
+    "premiumUnlockLabel": "AI விளக்கம் ஒரு Plus அம்சம் — தனிப்பயனாக்கப்பட்ட, படிப்படியான உதவிக்கு மேம்படுத்தவும்."
+  },
+  "practiceQuestionPanel": {
+    "getHint": "குறிப்பு பெறவும்",
+    "markForReview": "மறுபார்வைக்குக் குறிக்கவும்",
+    "markedForReview": "மறுபார்வைக்குக் குறிக்கப்பட்டது",
+    "hintLabelPrefix": "குறிப்பு:",
+    "lastFreeHintToast": "இன்றைக்கான உங்கள் கடைசி இலவசக் குறிப்பு அதுவாகும்.",
+    "dailyHintLimitTitle": "தினசரி குறிப்பு வரம்பு எட்டப்பட்டது",
+    "genericErrorTitle": "ஏதோ தவறாகிவிட்டது"
+  }
+}

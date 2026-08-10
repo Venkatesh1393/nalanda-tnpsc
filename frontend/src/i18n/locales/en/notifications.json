@@ -1,0 +1,39 @@
+{
+  "page": {
+    "heading": "Notifications",
+    "subtitle": "Exam reminders, study nudges, premium updates, and current affairs alerts — all in one place.",
+    "dashboard": "Dashboard"
+  },
+  "categories": {
+    "exam-reminder": "Exam Reminders",
+    "study-reminder": "Study Reminders",
+    "premium-update": "Premium Updates",
+    "current-affairs-alert": "Current Affairs Alerts",
+    "achievement": "Achievements",
+    "system-notice": "System Notices"
+  },
+  "categoryFilter": {
+    "all": "All"
+  },
+  "notificationCard": {
+    "markAsRead": "Mark as read",
+    "archive": "Archive notification",
+    "unarchive": "Unarchive notification",
+    "delete": "Delete notification",
+    "viewAction": "View"
+  },
+  "notificationList": {
+    "unreadCount": "{{count}} unread",
+    "archivedCount": "{{count}} archived",
+    "allCaughtUp": "You’re all caught up",
+    "markAllAsRead": "Mark all as read",
+    "viewArchived": "View archived",
+    "viewActive": "Back to active",
+    "loadErrorTitle": "Couldn’t load notifications",
+    "emptyTitle": "No notifications here",
+    "emptyDescriptionAll": "You’re all caught up — new notifications will show up here.",
+    "emptyDescriptionCategory": "Nothing in this category right now.",
+    "emptyArchivedTitle": "No archived notifications",
+    "emptyArchivedDescription": "Notifications you archive will show up here."
+  }
+}

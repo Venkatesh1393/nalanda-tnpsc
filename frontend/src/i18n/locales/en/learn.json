@@ -1,0 +1,166 @@
+{
+  "subjectsPage": {
+    "heading": "Learn",
+    "subtitle": "Browse your syllabus by subject."
+  },
+  "bookmarksPage": {
+    "backToLearn": "Learn",
+    "heading": "Bookmarks",
+    "subtitle": "Everything you've saved while studying."
+  },
+  "revisionPage": {
+    "backToLearn": "Learn",
+    "heading": "Revision",
+    "subtitle": "Today's spaced-repetition queue, prioritized for you."
+  },
+  "subtopicsPage": {
+    "breadcrumbLearn": "Learn"
+  },
+  "topicsPage": {
+    "backToLearn": "Learn",
+    "fallbackHeading": "Topics"
+  },
+  "videoPage": {
+    "breadcrumbLearn": "Learn",
+    "breadcrumbVideo": "Video",
+    "errorTitle": "Couldn't load this video",
+    "errorDescriptionWithNotes": "Try the Notes for this subtopic instead, or retry the video.",
+    "emptyTitle": "No video for this subtopic yet",
+    "backToLesson": "Back to lesson"
+  },
+  "notesPage": {
+    "breadcrumbLearn": "Learn",
+    "breadcrumbNotes": "Notes",
+    "errorTitle": "Couldn't load these notes",
+    "errorDescriptionWithVideo": "Try the Video for this subtopic instead, or retry the notes.",
+    "emptyTitle": "No notes for this subtopic yet",
+    "backToLesson": "Back to lesson"
+  },
+  "lessonDetailPage": {
+    "breadcrumbLearn": "Learn"
+  },
+  "subjectGrid": {
+    "filters": {
+      "all": "All",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "errorTitle": "Couldn't load subjects",
+    "emptyTitle": "No subjects match this filter",
+    "emptyDescription": "Try a different filter to see the rest of your syllabus.",
+    "showAll": "Show all subjects",
+    "topicCount": "{{count}} topics"
+  },
+  "videoPlayerMock": {
+    "pause": "Pause",
+    "play": "Play",
+    "watchedBadge": "Watched",
+    "skipBack": "-10s",
+    "skipForward": "+10s",
+    "playbackSpeedAriaLabel": "Playback speed",
+    "exitFullscreen": "Exit fullscreen",
+    "fullscreen": "Fullscreen",
+    "seekAriaLabel": "Seek — {{title}}",
+    "askAi": "Ask AI to explain this differently",
+    "askAiToast": "AI Doubt Chat is coming in a future phase — hang tight!",
+    "autoWatchedNote": "Automatically marked watched once you're most of the way through.",
+    "markWatched": "Already know this — mark as watched"
+  },
+  "bookmarkToggleButton": {
+    "removeAriaLabel": "Remove bookmark: {{label}}",
+    "addAriaLabel": "Bookmark: {{label}}"
+  },
+  "learnSearch": {
+    "groups": {
+      "subject": "Subjects",
+      "topic": "Topics",
+      "subtopic": "Subtopics"
+    },
+    "placeholder": "Search subjects, topics, or subtopics...",
+    "noMatches": "No matches for \"{{query}}\""
+  },
+  "lessonOverview": {
+    "errorTitle": "Couldn't load this lesson",
+    "notFoundTitle": "This lesson couldn't be found",
+    "notFoundDescription": "It may have moved — head back to Subjects and browse from there.",
+    "backToSubjects": "Back to Subjects",
+    "metaLine": "{{subjectName}} · {{topicName}} · {{minutes}} min",
+    "watchVideoTitle": "Watch Video",
+    "watchVideoSubtitle": "Short video lesson",
+    "readNotesTitle": "Read Notes",
+    "readNotesSubtitle": "Text-based study material",
+    "noContentTitle": "Content coming soon",
+    "noContentDescription": "Video and notes for this subtopic haven't been published yet.",
+    "practiceThisTopic": "Practice This Topic",
+    "completed": "Completed",
+    "markAsComplete": "Mark as Complete"
+  },
+  "notesReader": {
+    "minRead": "{{minutes}} min read",
+    "unlockLabel": "Unlock this note with Plus",
+    "downloadPremiumToast": "Upgrade to Plus to download this note as a PDF.",
+    "downloadToast": "PDF download needs a real backend — coming soon.",
+    "downloadPdf": "Download PDF",
+    "askAi": "Ask AI to explain this differently",
+    "askAiToast": "AI Doubt Chat is coming in a future phase — hang tight!",
+    "markedAsRead": "Marked as read",
+    "markAsRead": "Mark as Read"
+  },
+  "revisionQueue": {
+    "errorTitle": "Couldn't load your revision queue",
+    "preparing": "Preparing today's revision...",
+    "clearedTitle": "Today's revision, cleared!",
+    "clearedDescription": "Nice work — we'll bring the next set back at the right time.",
+    "emptyTitle": "Nothing due for revision today",
+    "emptyDescription": "Keep learning and we'll bring the right things back at the right time.",
+    "browseSubjects": "Browse Subjects",
+    "itemsCountOne": "{{count}} item for today's revision",
+    "itemsCountOther": "{{count}} items for today's revision",
+    "stillUnsure": "Still Unsure",
+    "gotIt": "Got It"
+  },
+  "subtopicList": {
+    "filters": {
+      "all": "All",
+      "video": "Video",
+      "notes": "Notes",
+      "bookmarked": "Bookmarked",
+      "completed": "Completed"
+    },
+    "errorTitle": "Couldn't load subtopics",
+    "emptyTitle": "No subtopics match this filter",
+    "showAll": "Show all subtopics",
+    "minutes": "{{minutes}} min"
+  },
+  "topicList": {
+    "filters": {
+      "all": "All",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
+    "errorTitle": "Couldn't load topics",
+    "noTopicsTitle": "More content coming soon for this subject",
+    "noTopicsDescription": "Our content team is still adding topics here — check back shortly.",
+    "emptyTitle": "No topics match this filter",
+    "showAll": "Show all topics",
+    "subtopicCount": "{{count}} subtopics"
+  },
+  "bookmarksList": {
+    "tabs": {
+      "all": "All",
+      "note": "Notes",
+      "video": "Videos",
+      "question": "Questions",
+      "currentAffairs": "Current Affairs"
+    },
+    "errorTitle": "Couldn't load bookmarks",
+    "emptyTitle": "Nothing bookmarked yet",
+    "emptyDescription": "Save notes, videos, and questions as you go — they'll show up here.",
+    "browseSubjects": "Browse Subjects",
+    "removeAriaLabel": "Remove bookmark: {{title}}",
+    "metaLine": "{{subjectName}} · {{topicName}} · Saved {{date}}"
+  },
+  "continueLearningBanner": {
+    "label": "Continue Learning"
+  }
+}

@@ -1,0 +1,339 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  Design tokens sourced from docs/UI_Design_System.md.
+  Do not hand-tune these values in components — update them here only,
+  and every component that consumes the semantic Tailwind color utilities
+  (bg-primary, text-muted-foreground, border-border, etc.) stays in sync
+  automatically in both themes.
+*/
+
+:root {
+  --radius: 0.625rem;
+
+  /* shadcn/ui semantic tokens — Light Theme (docs/UI_Design_System.md §12) */
+  --background: #ffffff;
+  --foreground: #1a1a22;
+  --card: #fafafc;
+  --card-foreground: #1a1a22;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a22;
+  --primary: #4a3fbf; /* primary-600, "Nalanda Indigo" */
+  --primary-foreground: #ffffff;
+  --secondary: #f2f1f7;
+  --secondary-foreground: #1a1a22;
+  --muted: #f4f4f6;
+  --muted-foreground: #5c5a6e; /* text-secondary */
+  --accent: #edebfb; /* primary-100 */
+  --accent-foreground: #3b3486; /* primary-700 */
+  --destructive: #c4392b; /* error-600 */
+  --destructive-foreground: #ffffff;
+  --border: #e4e3ec; /* border-subtle */
+  --input: #e4e3ec;
+  --ring: #4a3fbf;
+
+  /* Curated chart palette (docs/UI_Design_System.md §17) — distinct from
+     primary/destructive/success so a chart series is never confused with
+     a semantic status color. */
+  --chart-1: #4a3fbf;
+  --chart-2: #1fb6a8;
+  --chart-3: #b5872a;
+  --chart-4: #8b82e0;
+  --chart-5: #5c5a6e;
+
+  --sidebar: #fafafc;
+  --sidebar-foreground: #1a1a22;
+  --sidebar-primary: #4a3fbf;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #edebfb;
+  --sidebar-accent-foreground: #3b3486;
+  --sidebar-border: #e4e3ec;
+  --sidebar-ring: #4a3fbf;
+
+  /* The Footer surface (docs/Landing_Page_Design.md §18) — deliberately
+     "distinctly darker/deeper than the rest of the page" in light mode
+     (primary-900 "Ink", docs/UI_Design_System.md §6), a dedicated surface
+     token rather than a page-theme override, mirroring how --sidebar above
+     is already its own independent surface. */
+  --footer: #211c4e;
+  --footer-foreground: #f2f1f7;
+  /* The footer's own surface is dark in both site themes (an ink tint in
+     light mode, the standard dark background in dark mode) — one fixed,
+     lighter indigo reads correctly against both, so unlike --footer above
+     this is never overridden in `.dark`, the same way --sidebar-primary is
+     its own independent value rather than reusing the theme-swapping
+     --primary directly. Used only for the low-emphasis repeat "Get Started"
+     link (docs/Landing_Page_Design.md §18). */
+  --footer-primary: #7a70e8;
+
+  /* Nalanda-specific accents (docs/UI_Design_System.md §7) — reserved,
+     single-meaning colors: gold means achievement/premium, teal means AI.
+     Never repurpose these for anything else. */
+  --success: #1f9d55;
+  --success-foreground: #ffffff;
+  --warning: #b7791e;
+  --warning-foreground: #ffffff;
+  --ai-teal: #1fb6a8;
+  --ai-teal-foreground: #ffffff;
+  --premium-gold: #b5872a;
+  --premium-gold-foreground: #ffffff;
+
+  /* Typography (docs/UI_Design_System.md §3) — Inter for Latin script,
+     Anek Tamil for Tamil script, matched weight-for-weight so mixed
+     bilingual sentences don't visually clash. Actual font files/weights
+     are loaded in index.html, not bundled here. */
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-tamil: 'Anek Tamil', 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.dark {
+  /* shadcn/ui semantic tokens — Dark Theme (docs/UI_Design_System.md §11).
+     Values are independently tuned for dark surfaces, never a naive
+     inversion of the light theme. */
+  --background: #121218;
+  --foreground: #f2f1f7;
+  --card: #1a1a22;
+  --card-foreground: #f2f1f7;
+  --popover: #22222c;
+  --popover-foreground: #f2f1f7;
+  --primary: #7a70e8; /* lightened + desaturated for dark surfaces */
+  --primary-foreground: #14141a;
+  --secondary: #22222c;
+  --secondary-foreground: #f2f1f7;
+  --muted: #1a1a22;
+  --muted-foreground: #a8a6b8;
+  --accent: #2e2e38;
+  --accent-foreground: #f2f1f7;
+  --destructive: #e0554a;
+  --destructive-foreground: #14141a;
+  --border: #2e2e38;
+  --input: #2e2e38;
+  --ring: #7a70e8;
+
+  --chart-1: #7a70e8;
+  --chart-2: #35d6c7;
+  --chart-3: #d1a34a;
+  --chart-4: #a89dee;
+  --chart-5: #a8a6b8;
+
+  --sidebar: #1a1a22;
+  --sidebar-foreground: #f2f1f7;
+  --sidebar-primary: #7a70e8;
+  --sidebar-primary-foreground: #14141a;
+  --sidebar-accent: #2e2e38;
+  --sidebar-accent-foreground: #f2f1f7;
+  --sidebar-border: #2e2e38;
+  --sidebar-ring: #7a70e8;
+
+  /* In dark mode the page is already dark — the Footer just matches the
+     standard surface rather than getting a separate override (per
+     docs/Landing_Page_Design.md §18). */
+  --footer: var(--background);
+  --footer-foreground: var(--foreground);
+
+  --success: #34b76a;
+  --success-foreground: #14141a;
+  --warning: #cc9a3f;
+  --warning-foreground: #14141a;
+  --ai-teal: #35d6c7;
+  --ai-teal-foreground: #14141a;
+  --premium-gold: #d1a34a;
+  --premium-gold-foreground: #14141a;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-footer: var(--footer);
+  --color-footer-foreground: var(--footer-foreground);
+  --color-footer-primary: var(--footer-primary);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-ai-teal: var(--ai-teal);
+  --color-ai-teal-foreground: var(--ai-teal-foreground);
+  --color-premium-gold: var(--premium-gold);
+  --color-premium-gold-foreground: var(--premium-gold-foreground);
+
+  --font-sans: var(--font-sans);
+  --font-tamil: var(--font-tamil);
+  --font-heading: var(--font-sans);
+
+  /* Type scale (docs/UI_Design_System.md §4) — paired size/line-height
+     Tailwind utilities (text-display, text-heading-1, ...). Weight and
+     tracking aren't expressible here; the Typography component
+     (components/ui/typography.tsx) applies those per variant. */
+  --text-display: 2.5rem; /* 40px */
+  --text-display--line-height: 3rem; /* 48px */
+  --text-heading-1: 2rem; /* 32px */
+  --text-heading-1--line-height: 2.5rem; /* 40px */
+  --text-heading-2: 1.5rem; /* 24px */
+  --text-heading-2--line-height: 2rem; /* 32px */
+  --text-heading-3: 1.25rem; /* 20px */
+  --text-heading-3--line-height: 1.75rem; /* 28px */
+  --text-heading-4: 1.0625rem; /* 17px */
+  --text-heading-4--line-height: 1.5rem; /* 24px */
+  --text-body-lg: 1rem; /* 16px */
+  --text-body-lg--line-height: 1.5rem; /* 24px */
+  --text-body-md: 0.875rem; /* 14px */
+  --text-body-md--line-height: 1.25rem; /* 20px */
+  --text-body-sm: 0.8125rem; /* 13px */
+  --text-body-sm--line-height: 1.125rem; /* 18px */
+  --text-caption: 0.75rem; /* 12px */
+  --text-caption--line-height: 1rem; /* 16px */
+  --text-overline: 0.6875rem; /* 11px */
+  --text-overline--line-height: 0.875rem; /* 14px */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+/* Wrong-OTP shake (docs/OTP_Flow.md §6, §10) — a few oscillations of rapidly
+   decreasing amplitude, ~300-350ms total. The only consumer is
+   components/inputs/otp-input.tsx; kept here (not in animations/variants.ts)
+   because it's a CSS keyframe, not a Framer Motion variant. */
+@keyframes shake {
+  10%,
+  90% {
+    transform: translateX(-1px);
+  }
+  20%,
+  80% {
+    transform: translateX(2px);
+  }
+  30%,
+  50%,
+  70% {
+    transform: translateX(-3px);
+  }
+  40%,
+  60% {
+    transform: translateX(3px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-shake {
+    animation: shake 0.35s ease-in-out;
+  }
+}
+
+/* OTP auto-verify progress bar (docs/OTP_Flow.md §8) — shown beneath the
+   boxes in place of a button spinner specifically when verification was
+   auto-triggered by the 6th digit, since no button is already in focus to
+   host one. Only consumer: features/auth/components/otp-verification-form.tsx. */
+@keyframes otp-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-otp-progress {
+    animation: otp-progress 1.1s ease-in-out infinite;
+  }
+}
+
+/* Hero animated background (docs/Landing_Page_Design.md §4) — a very slow,
+   near-imperceptible gradient-position drift, GPU-friendly (background-position
+   only). The only consumer is pages/website/home/hero-section.tsx. */
+@keyframes gradient-drift {
+  0%,
+  100% {
+    background-position:
+      15% 20%,
+      85% 75%;
+  }
+  50% {
+    background-position:
+      25% 30%,
+      75% 65%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-gradient-drift {
+    animation: gradient-drift 75s ease-in-out infinite;
+  }
+}
+
+/* Testimonials marquee (docs/Landing_Page_Design.md §16) — a slow, continuous,
+   pausable-on-hover horizontal scroll. The track renders its item list twice
+   back-to-back so translating exactly -50% loops seamlessly. Only consumer:
+   pages/website/home/testimonials-section.tsx. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-marquee {
+    animation: marquee 42s linear infinite;
+  }
+
+  .animate-marquee:hover,
+  .animate-marquee:focus-within {
+    animation-play-state: paused;
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "shared": {
+    "backToDashboard": "Back to Dashboard",
+    "tnpscYear": "TNPSC — {{year}}",
+    "questionOf": "Question {{current}} of {{total}}",
+    "outcome": {
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "skipped": "Skipped"
+    }
+  },
+  "modeMeta": {
+    "quiz": {
+      "title": "Topic Quiz",
+      "description": "A focused quiz on one topic, sequenced to your pace — a soft timer, no exam pressure."
+    },
+    "hundredQuestions": {
+      "title": "100 Questions",
+      "description": "Nalanda's signature full-syllabus practice set, weighted toward your weak areas."
+    },
+    "sectional": {
+      "title": "Sectional Test",
+      "description": "A fixed-time test covering one subject, matching real exam conditions."
+    },
+    "mock": {
+      "title": "Mock Test",
+      "description": "A full-length, fixed-time mock mirroring the real TNPSC exam."
+    },
+    "pyq": {
+      "title": "Previous Year Questions",
+      "description": "Solve real questions from a past TNPSC exam, filtered by year."
+    }
+  },
+  "modePickerPage": {
+    "unknownModeTitle": "Unknown practice mode",
+    "unknownModeDescription": "That practice mode doesn't exist."
+  },
+  "modeConfigForm": {
+    "subjectLabel": "Subject",
+    "subjectRequiredLabel": "Subject *",
+    "topicRequiredLabel": "Topic *",
+    "chooseSubjectPlaceholder": "Choose a subject",
+    "chooseSubjectOptionalPlaceholder": "Choose a subject (optional)",
+    "chooseTopicPlaceholder": "Choose a topic",
+    "numberOfQuestionsLabel": "Number of Questions",
+    "difficultyLabel": "Difficulty",
+    "difficultyAll": "All",
+    "yearLabel": "Year",
+    "startButton": "Start {{modeTitle}}"
+  },
+  "practiceHistoryPage": {
+    "heading": "Practice History",
+    "errorTitle": "Couldn't load your practice history",
+    "emptyTitle": "No practice sessions yet",
+    "emptyDescription": "Finish a Topic Quiz to see your history here.",
+    "startPracticing": "Start Practicing",
+    "correctCount": "{{correct}}/{{total}} correct"
+  },
+  "practiceSessionPage": {
+    "sessionProgressAriaLabel": "Session progress",
+    "submitTest": "Submit Test",
+    "answeredOfTotal": "{{answered}} of {{total}} answered",
+    "errorTitle": "Couldn't load this practice session",
+    "notFoundTitle": "This practice session couldn't be found",
+    "timesUpToast": "Time's up — your test has been submitted."
+  },
+  "practiceReviewPage": {
+    "heading": "Review",
+    "errorTitle": "Couldn't load this review",
+    "emptyTitle": "Nothing to review yet",
+    "emptyDescription": "Submit a practice session first — then it'll show up here.",
+    "bookmarkForRevision": "Bookmark for Revision",
+    "backToSummary": "Back to Summary"
+  },
+  "practiceSummaryPage": {
+    "summaryHeading": "{{modeTitle}} Summary",
+    "practiceFallback": "Practice",
+    "submittedSubtitle": "Test submitted successfully — here's how you did.",
+    "performance": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "needsImprovement": "Needs Improvement"
+    },
+    "errorTitle": "Couldn't load your results",
+    "emptyTitle": "No results yet",
+    "emptyDescription": "This session hasn't been submitted.",
+    "reviewAnswers": "Review Answers",
+    "practiceAgain": "Practice Again",
+    "goToAnalytics": "Go to Analytics",
+    "practiceHistory": "Practice History"
+  },
+  "achievementUnlockBanner": {
+    "title_one": "New Achievement Unlocked!",
+    "title_other": "New Achievements Unlocked!"
+  },
+  "achievements": {
+    "first-100-questions": {
+      "title": "First 100 Questions Completed",
+      "description": "Finished a full 100 Questions set"
+    },
+    "seven-day-streak": {
+      "title": "7-Day Practice Streak",
+      "description": "Practiced 7 days in a row"
+    },
+    "first-mock-completed": {
+      "title": "First Mock Test Finished",
+      "description": "Completed your first full Mock Test"
+    },
+    "pyq-completionist": {
+      "title": "PYQ Completionist",
+      "description": "Completed a Previous Year Questions set"
+    },
+    "comeback": {
+      "title": "Comeback",
+      "description": "Returned to practice after a break"
+    },
+    "first-practice": {
+      "title": "First Practice",
+      "description": "Completed your first practice session"
+    },
+    "hundred-questions": {
+      "title": "100 Questions",
+      "description": "Answered 100 questions across all practice sessions"
+    },
+    "five-hundred-questions": {
+      "title": "500 Questions",
+      "description": "Answered 500 questions across all practice sessions"
+    },
+    "thousand-questions": {
+      "title": "1000 Questions",
+      "description": "Answered 1000 questions across all practice sessions"
+    },
+    "thirty-day-streak": {
+      "title": "30-Day Streak",
+      "description": "Studied 30 days in a row"
+    },
+    "perfect-score": {
+      "title": "Perfect Score",
+      "description": "Scored 100% accuracy in a practice session"
+    },
+    "fast-learner": {
+      "title": "Fast Learner",
+      "description": "Completed 5 lessons in a single day"
+    }
+  },
+  "practiceSummaryCard": {
+    "accuracyLabel": "Accuracy",
+    "scoreSummary": "{{correct}} of {{total}} correct · {{time}}",
+    "timeFormat": "{{minutes}}m {{seconds}}s",
+    "xpAwarded": "+{{xp}} XP",
+    "coinsAwarded": "+{{coins}} Coins"
+  },
+  "questionPalette": {
+    "groupAriaLabel": "Question navigator",
+    "itemAriaLabel": "Question {{number}}",
+    "itemAriaLabelCurrent": "Question {{number}}, current"
+  },
+  "questionTimer": {
+    "timeElapsed": "Time elapsed",
+    "timeRemaining": "Time remaining"
+  },
+  "aiExplanationPanel": {
+    "standardExplanationTitle": "Standard Explanation",
+    "aiExplanationTitle": "AI Explanation",
+    "acknowledgementCorrect": "You selected \"{{selected}}\" — that's correct.",
+    "acknowledgementIncorrect": "You selected \"{{selected}}\". The correct answer is \"{{correct}}\".",
+    "acknowledgementUnanswered": "You didn't select an answer. The correct answer is \"{{correct}}\".",
+    "teaserBody": "Get a personalized, step-by-step AI explanation for this question.",
+    "getExplanationButton": "Get AI Explanation",
+    "whyCorrectTitle": "Why this is correct",
+    "whyYoursWrongTitle": "Why your answer was incorrect",
+    "keyConceptTitle": "Key concept",
+    "memoryTrickTitle": "Memory trick",
+    "examRelevanceTitle": "TNPSC exam relevance",
+    "askFollowUpButton": "Ask a Follow-up",
+    "followUpToast": "Follow-up chat is coming in a future phase — hang tight!",
+    "notAvailableForModeBody": "AI Explanation is available for Topic Quiz sessions right now — Standard Explanation above still covers this question.",
+    "quotaReachedTitle": "Today's AI Explanation limit reached",
+    "quotaReachedBody": "Standard Explanation is still available above. Your AI Explanation allowance resets tomorrow.",
+    "quotaReachedToast": "You've reached today's AI Explanation limit — Standard Explanation is still available.",
+    "unavailableTitle": "AI Explanation is temporarily unavailable",
+    "unavailableBody": "Standard Explanation above still covers this question. Please try AI Explanation again in a moment.",
+    "retryButton": "Try again",
+    "premiumUnlockLabel": "AI Explanation is a Plus feature — upgrade for personalized, step-by-step help."
+  },
+  "practiceQuestionPanel": {
+    "getHint": "Get a Hint",
+    "markForReview": "Mark for Review",
+    "markedForReview": "Marked for Review",
+    "hintLabelPrefix": "Hint:",
+    "lastFreeHintToast": "That was your last free hint for today.",
+    "dailyHintLimitTitle": "Daily hint limit reached",
+    "genericErrorTitle": "Something went wrong"
+  }
+}

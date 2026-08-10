@@ -1,0 +1,130 @@
+{
+  "sections": {
+    "profile": "Profile",
+    "preferences": "Preferences",
+    "notifications": "Notifications",
+    "privacy": "Privacy",
+    "security": "Security"
+  },
+  "settingsPage": {
+    "heading": "Settings",
+    "subtitle": "Your profile, preferences, and account controls.",
+    "logOut": "Log out",
+    "loggedOutToast": "Logged out",
+    "unknownSectionTitle": "Unknown Settings section",
+    "unknownSectionDescription": "That section doesn't exist."
+  },
+  "languagePreferenceCard": {
+    "title": "Language",
+    "helperText": "Full bilingual content is on the way — this sets your preference for when it arrives.",
+    "options": {
+      "en": {
+        "title": "English",
+        "description": "Interface language"
+      },
+      "ta": {
+        "title": "தமிழ்",
+        "description": "இடைமுக மொழி"
+      }
+    }
+  },
+  "themePreferenceCard": {
+    "title": "Theme",
+    "options": {
+      "light": {
+        "title": "Light",
+        "description": "Bright surfaces, always on"
+      },
+      "dark": {
+        "title": "Dark",
+        "description": "Linear-style dark mode"
+      },
+      "system": {
+        "title": "System",
+        "description": "Match your device setting"
+      }
+    }
+  },
+  "avatarUploader": {
+    "changePhoto": "Change Photo",
+    "removePhotoAriaLabel": "Remove photo",
+    "storedOnDeviceOnly": "Stored on this device only — cloud sync coming soon.",
+    "invalidFileType": "Please choose an image file",
+    "fileTooLargeTitle": "Image is too large",
+    "fileTooLargeDescription": "Please choose one under 2 MB."
+  },
+  "notificationPreferencesCard": {
+    "title": "Notification Preferences",
+    "errorTitle": "Couldn't load your notification preferences"
+  },
+  "personalDetailsCard": {
+    "title": "Personal Details",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "changeEmailButton": "Change Email",
+    "changeEmailToastTitle": "Changing your email requires OTP re-verification",
+    "changeEmailToastDescription": "This flow needs a real backend to send the verification code — coming soon.",
+    "examGoalLabel": "Exam Goal",
+    "memberSinceLabel": "Member Since",
+    "saveChangesButton": "Save Changes",
+    "profileUpdatedToast": "Profile updated",
+    "saveErrorToastTitle": "Could not save your changes",
+    "saveErrorToastDescription": "Please try again.",
+    "loadErrorTitle": "Couldn't load your profile",
+    "validation": {
+      "nameMin": "Name must be at least 2 characters",
+      "nameMax": "Name is too long"
+    }
+  },
+  "privacyCard": {
+    "title": "Privacy & Data",
+    "exportDataTitle": "Export My Data",
+    "exportDataDescription": "Download a copy of everything linked to your account.",
+    "exportDataButton": "Export Data",
+    "exportRequestedToastTitle": "Data export requested",
+    "exportRequestedToastDescription": "We'll email you a download link once it's ready.",
+    "deleteAccountTitle": "Delete Account",
+    "deleteAccountDescription": "Permanently delete your account and all associated data.",
+    "deleteAccountButton": "Delete Account",
+    "deleteDialogTitle": "Delete your account?",
+    "deleteDialogDescription": "This permanently deletes your profile, progress, and bookmarks. This can't be undone.",
+    "confirmDeleteButton": "Yes, Delete My Account",
+    "deletionRequestedToastTitle": "Account deletion requested",
+    "deletionRequestedToastDescription": "You have been logged out."
+  },
+  "securityCard": {
+    "accountRecoveryTitle": "Account Recovery",
+    "accountRecoveryDescription": "Nalanda is passwordless — there's no password to reset. If you change your registered email, we'll re-verify the new one by OTP and notify your old email of the change. If you suspect someone else has access, log out of every other device below.",
+    "activeSessionsTitle": "Active Sessions",
+    "logoutAllButton": "Log out all other devices",
+    "loadSessionsErrorTitle": "Couldn't load your sessions",
+    "currentDeviceBadge": "This device",
+    "sessionActivity": "{{location}} · Active {{time}}",
+    "logoutSessionButton": "Log out"
+  },
+  "studyStatisticsCard": {
+    "loadErrorTitle": "Couldn't load your study statistics",
+    "currentStreakLabel": "Current Streak",
+    "currentStreakValue": "{{count}} days",
+    "overallAccuracyLabel": "Overall Accuracy",
+    "overallAccuracyValue": "{{percent}}%",
+    "questionsAttemptedLabel": "Questions Attempted",
+    "xpLabel": "XP",
+    "coinsLabel": "Coins"
+  },
+  "subscriptionStatusCard": {
+    "title": "Subscription",
+    "tier": {
+      "free": "Free",
+      "plus": "Plus",
+      "pro": "Pro",
+      "institutional": "Institutional"
+    },
+    "planBadge": "{{tier}} Plan",
+    "loadErrorTitle": "Couldn't load your subscription status",
+    "freeDescription": "Unlock unlimited mock tests, unlimited hints, and full PYQ history.",
+    "premiumDescription": "Thanks for being a premium member — manage your plan and invoices anytime.",
+    "upgradeButton": "Upgrade to Plus",
+    "manageButton": "Manage Subscription"
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "nav": {
+    "currentAffairs": "Current Affairs",
+    "learn": "Learn",
+    "smartPractice": "Smart Practice",
+    "weeklyLiveExam": "Weekly Live Exam",
+    "analytics": "Analytics",
+    "community": "Community",
+    "primary": "Primary",
+    "openMenu": "Open menu",
+    "siteMenu": "Nalanda TNPSC menu",
+    "siteMenuDescription": "Site navigation and account actions"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "continue": "Continue",
+    "login": "Login",
+    "getStartedFree": "Get Started Free",
+    "pricing": "Pricing",
+    "subscribe": "Subscribe",
+    "upgrade": "Upgrade",
+    "learnMore": "Learn more"
+  },
+  "a11y": {
+    "progressOf": "{{name}} progress",
+    "answerOptions": "Answer options",
+    "showHiddenSegments": "Show hidden path segments",
+    "clearSearch": "Clear search",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password"
+  },
+  "select": {
+    "placeholder": "Select...",
+    "noResultsFound": "No results found."
+  },
+  "difficulty": {
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
+  },
+  "spinner": {
+    "loading": "Loading"
+  },
+  "theme": {
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme"
+  },
+  "language": {
+    "switchToTamil": "Switch to Tamil",
+    "switchToEnglish": "Switch to English"
+  },
+  "emptyState": {
+    "defaultTitle": "Nothing here yet"
+  },
+  "errorState": {
+    "title": "Something didn't load",
+    "description": "Please try again — if the problem continues, it may be temporary.",
+    "retryLabel": "Retry"
+  },
+  "notFound": {
+    "title": "We couldn't find that page",
+    "description": "It may have been moved, or the link might be incorrect.",
+    "actionLabel": "Back to Dashboard"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "goToPreviousPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "morePages": "More pages",
+    "label": "pagination"
+  },
+  "command": {
+    "paletteTitle": "Command Palette",
+    "paletteDescription": "Search for a command to run..."
+  },
+  "dataTable": {
+    "noResults": "No results.",
+    "rowsPerPage": "Rows per page",
+    "pageOf": "Page {{current}} of {{total}}",
+    "rowsSelected": "{{selected}} of {{total}} row(s) selected.",
+    "rowsTotal": "{{total}} row(s) total.",
+    "firstPage": "First page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "lastPage": "Last page",
+    "switchToComfortable": "Switch to comfortable rows",
+    "switchToCompact": "Switch to compact rows"
+  },
+  "footer": {
+    "tagline": "The AI-guided TNPSC preparation companion — structured content, adaptive practice, and personalized mentorship in Tamil and English.",
+    "newsletterLabel": "Get notified about new TNPSC notifications",
+    "newsletterPlaceholder": "you@example.com",
+    "subscribedTitle": "Subscribed",
+    "subscribedDescription": "We'll email you before the next TNPSC notification.",
+    "companyGroup": "Company",
+    "about": "About",
+    "contact": "Contact",
+    "coursesGroup": "Courses",
+    "resourcesGroup": "Resources",
+    "currentAffairs": "Current Affairs",
+    "successStories": "Success Stories",
+    "blog": "Blog",
+    "copyright": "© {{year}} Nalanda TNPSC. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "getStartedFree": "Get Started Free",
+    "paymentsSecured": "Payments secured by Razorpay"
+  },
+  "validation": {
+    "required": "This field is required"
+  },
+  "chart": {
+    "percent": "{{value}} percent",
+    "lastUpdated": "Last updated {{value}}"
+  }
+}

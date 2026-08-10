@@ -1,0 +1,90 @@
+{
+  "page": {
+    "heading": "Current Affairs",
+    "subtitle": "Daily updates, weekly digests, and a browsable monthly archive — all tagged for TNPSC exam relevance.",
+    "periodTabs": {
+      "daily": "Daily",
+      "weekly": "Weekly Digest",
+      "monthly": "Monthly Archive"
+    },
+    "unknownView": {
+      "title": "Unknown Current Affairs view",
+      "description": "That view doesn't exist.",
+      "actionLabel": "Back to Dashboard"
+    }
+  },
+  "articleDetailPage": {
+    "backLink": "Back to Current Affairs",
+    "errorTitle": "Couldn't load this article",
+    "notFound": {
+      "title": "Article not found",
+      "description": "This article may have been removed.",
+      "actionLabel": "Back to Current Affairs"
+    }
+  },
+  "categories": {
+    "national": "National",
+    "tamil-nadu": "Tamil Nadu",
+    "economy": "Economy",
+    "environment": "Environment",
+    "science-tech": "Science & Tech",
+    "polity-governance": "Polity & Governance",
+    "international": "International",
+    "sports-awards": "Sports & Awards"
+  },
+  "categoryFilter": {
+    "all": "All"
+  },
+  "currentAffairsSearch": {
+    "placeholder": "Search current affairs by title or topic...",
+    "resultsHeading": "Articles",
+    "noMatches": "No matches for \"{{query}}\""
+  },
+  "highlightsCard": {
+    "heading": "Important Highlights"
+  },
+  "shareButton": {
+    "label": "Share",
+    "shareError": "Couldn't share this article — try copying the link instead.",
+    "copySuccess": "Link copied to clipboard",
+    "copyError": "Couldn't copy the link — please copy it from the address bar."
+  },
+  "quizDialog": {
+    "trigger": "Take Quiz",
+    "noQuizAvailable": "No quiz is available for this article yet.",
+    "questionOf": "Question {{current}} of {{total}}",
+    "scoreHeading": "{{correct}} of {{total}} correct",
+    "perfectScore": "Perfect score — this one is locked in.",
+    "goodScore": "Nice work — review the article again if anything felt shaky.",
+    "retake": "Retake Quiz",
+    "explanationHeading": "Explanation",
+    "nextQuestion": "Next Question",
+    "seeResults": "See Results"
+  },
+  "articleCard": {
+    "important": "Important"
+  },
+  "readStatus": {
+    "read": "Read",
+    "percentRead": "{{percent}}% read"
+  },
+  "articleDetail": {
+    "markAsRead": "Mark as Read",
+    "markedAsRead": "Marked as read"
+  },
+  "currentAffairsFeed": {
+    "errorTitle": "Couldn't load current affairs",
+    "empty": {
+      "daily": "Nothing new today — check back soon.",
+      "weekly": "No weekly digest published yet for this filter.",
+      "monthly": "No monthly capsule published yet for this filter."
+    }
+  },
+  "monthlyArchive": {
+    "loadArchiveError": "Couldn't load the archive",
+    "noMonths": "No archived months yet",
+    "monthLabel": "{{label}} ({{count}})",
+    "loadMonthError": "Couldn't load this month's archive",
+    "noArticlesForMonth": "Nothing archived for this month"
+  }
+}

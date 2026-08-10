@@ -1,0 +1,98 @@
+{
+  "analyticsPage": {
+    "heading": "Analytics",
+    "subtitle": "Your performance, effort, and standing — all in one place.",
+    "dashboardLink": "Dashboard",
+    "emptyState": {
+      "title": "No analytics yet",
+      "description": "Complete practice questions to unlock your performance analytics.",
+      "actionLabel": "Start Practice"
+    }
+  },
+  "analyticsSummaryRow": {
+    "overallPercentile": {
+      "label": "Overall Percentile",
+      "value": "{{value}}th"
+    },
+    "overallAccuracy": {
+      "label": "Overall Accuracy",
+      "value": "{{value}}%"
+    },
+    "questionsAttempted": {
+      "label": "Questions Attempted"
+    },
+    "currentStreak": {
+      "label": "Current Streak",
+      "value": "{{value}} days"
+    }
+  },
+  "goalCompletionChart": {
+    "title": "Goal Completion",
+    "description": "Toward {{exam}}",
+    "errorTitle": "Couldn't load goal completion",
+    "completeLabel": "complete",
+    "daysUntil": "{{days}} days until {{date}}"
+  },
+  "monthlyProgressChart": {
+    "title": "Monthly Progress",
+    "description": "Overall exam-readiness trend, last 6 months.",
+    "errorTitle": "Couldn't load monthly progress",
+    "summaryGained": "Up {{gained}} points since {{since}} — now at {{percent}}%.",
+    "summarySteady": "Holding steady since {{since}} — now at {{percent}}%."
+  },
+  "practiceHistoryChart": {
+    "title": "Practice History",
+    "description": "Score per session, most recent 8 sessions.",
+    "errorTitle": "Couldn't load practice history",
+    "tooltipScore": "{{value}}% score",
+    "scoreSeriesName": "Score"
+  },
+  "speedAnalysisChart": {
+    "title": "Speed Analysis",
+    "description": "Your average time per question vs. the cohort benchmark.",
+    "errorTitle": "Couldn't load speed analysis",
+    "yourLabel": "You",
+    "cohortLabel": "Cohort avg."
+  },
+  "strongAreasChart": {
+    "title": "Strong Areas",
+    "description": "Your 5 highest-accuracy topics right now.",
+    "errorTitle": "Couldn't load strong areas",
+    "accuracyLabel": "Accuracy"
+  },
+  "subjectAccuracyChart": {
+    "title": "Subject Accuracy",
+    "description": "Sorted weakest to strongest across your active exam goal.",
+    "errorTitle": "Couldn't load subject accuracy",
+    "accuracyLabel": "Accuracy"
+  },
+  "weakAreasChart": {
+    "title": "Weak Areas",
+    "description": "Your 5 lowest-accuracy topics right now.",
+    "errorTitle": "Couldn't load weak areas",
+    "accuracyLabel": "Accuracy",
+    "studyButton": "Study {{topic}}"
+  },
+  "weeklyStudyTimeChart": {
+    "title": "Weekly Study Time",
+    "description": "Minutes studied per day, last 7 days.",
+    "errorTitle": "Couldn't load study time",
+    "summary": "{{hours}}h {{minutes}}m total — active {{daysActive}} of the last 7 days.",
+    "minutesLabel": "Minutes"
+  },
+  "rankPredictionChart": {
+    "title": "Rank Prediction",
+    "description": "Where you stand relative to other aspirants.",
+    "errorTitle": "Couldn't load rank prediction",
+    "percentileLabel": "{{value}}th percentile",
+    "rankOf": "— rank #{{rank}} of {{cohort}} aspirants.",
+    "smallCohortNote": "Based on a smaller group of aspirants — treat this as a rough estimate.",
+    "youLabel": "You"
+  },
+  "questionDifficultyChart": {
+    "title": "Question Difficulty",
+    "description": "Accuracy by difficulty level, where enough attempts exist.",
+    "errorTitle": "Couldn't load difficulty breakdown",
+    "accuracyLabel": "Accuracy"
+  }
+}

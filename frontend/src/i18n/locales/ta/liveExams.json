@@ -1,0 +1,114 @@
+{
+  "page": {
+    "heading": "வாராந்திர நேரடி தேர்வு",
+    "subtitle": "திட்டமிடப்பட்ட, குழு அளவிலான மாதிரித் தேர்வுகள் — உண்மையான தேர்வு அழுத்தம், உண்மையான நேரக் கட்டுப்பாடு.",
+    "unknownTabTitle": "அறியப்படாத தாவல்",
+    "unknownTabDescription": "அந்த நேரடி தேர்வு தாவல் இல்லை.",
+    "backToDashboard": "டாஷ்போர்டுக்குத் திரும்பு"
+  },
+  "tabs": {
+    "upcoming": "வரவிருக்கும்",
+    "live": "நேரடி",
+    "completed": "முடிந்தது",
+    "myAttempts": "எனது முயற்சிகள்"
+  },
+  "examList": {
+    "errorTitle": "நேரடி தேர்வுகளை ஏற்ற முடியவில்லை",
+    "emptyDescription": "விரைவில் மீண்டும் பாருங்கள் — புதிய நேரடி தேர்வுகள் தொடர்ந்து திட்டமிடப்படுகின்றன.",
+    "emptyTitle": {
+      "upcoming": "வரவிருக்கும் தேர்வுகள் இல்லை",
+      "live": "நேரடி தேர்வுகள் இல்லை",
+      "completed": "முடிந்த தேர்வுகள் இல்லை"
+    }
+  },
+  "myAttempts": {
+    "errorTitle": "உங்கள் முயற்சிகளை ஏற்ற முடியவில்லை",
+    "emptyTitle": "இதுவரை முயற்சிகள் இல்லை",
+    "emptyDescription": "உங்கள் முயற்சிகளை இங்கே காண ஒரு நேரடி தேர்வில் இணையுங்கள்.",
+    "browseUpcoming": "வரவிருக்கும் தேர்வுகளைப் பார்க்க"
+  },
+  "detail": {
+    "errorTitle": "இந்த நேரடி தேர்வை ஏற்ற முடியவில்லை",
+    "notFoundTitle": "நேரடி தேர்வு கிடைக்கவில்லை",
+    "backToLiveExams": "நேரடி தேர்வுகளுக்குத் திரும்பு",
+    "startExam": "தேர்வைத் தொடங்கு",
+    "resumeExam": "தேர்வைத் தொடரவும்",
+    "viewResult": "முடிவைக் காண்க",
+    "scheduled": "திட்டமிடப்பட்ட நேரம்",
+    "liveNow": "இப்போது நேரடி",
+    "duration": "கால அளவு",
+    "durationValue": "{{minutes}} நிமிடம்",
+    "questions": "கேள்விகள்",
+    "totalMarks": "மொத்த மதிப்பெண்கள்",
+    "negativeMarking": "எதிர்மறை மதிப்பீடு",
+    "negativeMarkingValue": "-{{marks}} / தவறான பதிலுக்கு",
+    "negativeMarkingNone": "இல்லை",
+    "instructions": "வழிமுறைகள்",
+    "cancelled": "இந்த நேரடி தேர்வு ரத்து செய்யப்பட்டுள்ளது.",
+    "upcomingNote": "இந்தத் தேர்வு நேரடியாகும் தருணத்திலேயே இணைவது திறக்கும் — திட்டமிடப்பட்ட நேரத்தில் மீண்டும் வாருங்கள்.",
+    "windowClosed": "இந்தத் தேர்வு காலம் முடிவடைந்துவிட்டது.",
+    "premiumUnlock": "நேரடி தேர்வுகள் ஒரு Plus அம்சம் — திட்டமிடப்பட்ட, குழு அளவிலான மாதிரித் தேர்வுகளில் இணைய மேம்படுத்துங்கள்.",
+    "joinErrorTitle": "இந்தத் தேர்வைத் தொடங்க முடியவில்லை",
+    "joinErrorFallback": "இந்தத் தேர்வு தற்போது இணைய முடியாதது.",
+    "joinErrorGeneric": "இந்தத் தேர்வைத் தொடங்குவதில் சிக்கல் ஏற்பட்டது."
+  },
+  "session": {
+    "errorTitle": "இந்த நேரடி தேர்வை ஏற்ற முடியவில்லை",
+    "label": "நேரடி தேர்வு",
+    "questionOf": "கேள்வி {{current}} / {{total}}",
+    "progressAriaLabel": "தேர்வு முன்னேற்றம்",
+    "previous": "முந்தையது",
+    "next": "அடுத்தது",
+    "submitExam": "தேர்வைச் சமர்ப்பி",
+    "answeredCount": "{{total}}-இல் {{answered}} பதிலளிக்கப்பட்டது",
+    "timeUpToast": "நேரம் முடிந்தது — உங்கள் தேர்வு சமர்ப்பிக்கப்பட்டது."
+  },
+  "result": {
+    "errorTitle": "உங்கள் முடிவை ஏற்ற முடியவில்லை",
+    "notPublishedTitle": "முடிவு இன்னும் வெளியிடப்படவில்லை",
+    "notPublishedDescription": "தேர்வு காலம் முழுமையாக முடிந்ததும், அனைவருக்கும் ஒரே நேரத்தில் முடிவுகள் வெளியிடப்படும் — {{date}} முதல் கிடைக்கும்.",
+    "backToMyAttempts": "எனது முயற்சிகளுக்குத் திரும்பு",
+    "heading": "உங்கள் முடிவு",
+    "accuracy": "துல்லியம்",
+    "correctOfTotal": "{{total}}-இல் {{correct}} சரியானவை · {{time}}",
+    "timeTaken": "{{minutes}} நிமி {{seconds}} வி",
+    "score": "மதிப்பெண்",
+    "review": "மறுஆய்வு",
+    "noQuestionsToReview": "மறுஆய்வு செய்ய கேள்விகள் இல்லை",
+    "questionNumber": "கேள்வி {{number}}",
+    "stats": {
+      "correct": "சரி",
+      "incorrect": "தவறு",
+      "unanswered": "பதிலளிக்கப்படாதவை"
+    },
+    "questionStatus": {
+      "correct": "சரி",
+      "incorrect": "தவறு",
+      "skipped": "தவிர்க்கப்பட்டது"
+    }
+  },
+  "myAttemptCard": {
+    "started": "{{date}} அன்று தொடங்கப்பட்டது",
+    "submitted": "{{date}} அன்று சமர்ப்பிக்கப்பட்டது",
+    "inProgress": "நடைபெறுகிறது",
+    "resultPending": "முடிவு நிலுவையில்"
+  },
+  "questionPanel": {
+    "markForReview": "மறுஆய்விற்கு குறி",
+    "markedForReview": "மறுஆய்விற்கு குறிக்கப்பட்டது"
+  },
+  "countdown": {
+    "daysHoursMinutes": "{{days}} நாள் {{hours}} மணி {{minutes}} நிமி"
+  },
+  "liveExamCard": {
+    "status": {
+      "upcoming": "வரவிருக்கிறது",
+      "live": "இப்போது நேரடி",
+      "completed": "முடிந்தது",
+      "cancelled": "ரத்து செய்யப்பட்டது"
+    },
+    "questionsMarks": "{{questions}} கேள்விகள் · {{marks}} மதிப்பெண்கள்",
+    "attempted": "முயற்சிக்கப்பட்டது",
+    "inProgress": "நடைபெறுகிறது"
+  }
+}

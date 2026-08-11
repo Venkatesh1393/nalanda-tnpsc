@@ -10,6 +10,7 @@ import { morganStream } from './config/logger'
 import { errorHandler } from './middleware/errorHandler.middleware'
 import { notFound } from './middleware/notFound.middleware'
 import { defaultRateLimiter } from './middleware/rateLimiter.middleware'
+import { requestMonitoring } from './middleware/requestMonitoring.middleware'
 import healthRoutes from './routes/health.routes'
 import routes from './routes'
 
@@ -49,6 +50,10 @@ export function createApp(): Express {
   // and get a stable, unwrapped body regardless of API version changes.
   app.use('/api/health', healthRoutes)
 
+  // Sprint 4 Step 74 — mounted after health routes (uptime-monitor polling
+  // shouldn't count as request-performance signal) but before everything
+  // else, so it observes rate-limited/versioned API traffic only.
+  app.use(requestMonitoring)
   app.use(defaultRateLimiter)
   app.use(`/api/${env.API_VERSION}`, routes)
 

@@ -9,6 +9,18 @@
       name="description"
       content="Nalanda TNPSC — AI-powered TNPSC exam preparation platform for Tamil Nadu."
     />
+
+    <!--
+      PWA readiness (Sprint 4 Step 71) — `vite-plugin-pwa` (vite.config.ts)
+      injects the `<link rel="manifest">` and service-worker registration
+      script itself at build time; these are the tags it doesn't cover
+      (iOS has no manifest icon/standalone support of its own, per Apple's
+      long-standing non-standard meta tags).
+    -->
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Nalanda" />
     <title>Nalanda TNPSC</title>
 
     <!--

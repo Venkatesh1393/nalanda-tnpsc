@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Sprint 4 Step 71 — rollup-plugin-visualizer's bundle treemap
+# (`npm run build -- --mode analyze`), written to the project root, never
+# part of the served `dist/` output.
+stats.html
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -7,6 +7,7 @@ import { logger } from '../config/logger'
 import { HttpStatus } from '../constants/httpStatus'
 import { ApiError } from '../utils/ApiError'
 import { sendError } from '../utils/ApiResponse'
+import { recordSystemEvent } from '../utils/systemEvents'
 
 /**
  * The single place an error becomes an HTTP response. Mounted last in
@@ -24,6 +25,17 @@ export function errorHandler(
   if (error instanceof ApiError) {
     if (!error.isOperational) {
       logger.error(error.message, { stack: error.stack, path: req.path })
+      // Sprint 4 Step 74 — a non-operational ApiError is still an
+      // unexpected bug (the operational/non-operational split is about
+      // "was this thrown deliberately for an expected condition," not
+      // severity), so it's tracked the same as the generic 500 branch below.
+      recordSystemEvent({
+        type: 'error',
+        severity: 'error',
+        message: error.message,
+        source: `${req.method} ${req.path}`,
+        metadata: { statusCode: error.statusCode, code: error.code },
+      })
     }
     sendError(res, error.statusCode, error.message, error.code, error.details)
     return
@@ -75,6 +87,13 @@ export function errorHandler(
   const message = error instanceof Error ? error.message : 'Unknown error'
   const stack = error instanceof Error ? error.stack : undefined
   logger.error(message, { stack, path: req.path, method: req.method })
+  recordSystemEvent({
+    type: 'error',
+    severity: 'critical',
+    message,
+    source: `${req.method} ${req.path}`,
+    metadata: { statusCode: HttpStatus.INTERNAL_SERVER_ERROR },
+  })
 
   sendError(
     res,

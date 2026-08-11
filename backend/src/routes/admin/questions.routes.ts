@@ -3,10 +3,16 @@ import { Router } from 'express'
 import * as adminQuestionsController from '../../controllers/admin/adminQuestions.controller'
 import * as questionImportController from '../../controllers/admin/questionImport.controller'
 import { authorizeRoles } from '../../middleware/rbac.middleware'
-import { uploadBulkImportFile } from '../../middleware/upload.middleware'
+import {
+  uploadBulkImportFile,
+  uploadPdfMetadataFile,
+} from '../../middleware/upload.middleware'
 import { validate } from '../../middleware/validate.middleware'
 import { asyncHandler } from '../../utils/asyncHandler'
 import {
+  bulkDeleteBodySchema,
+  bulkUpdateBodySchema,
+  bulkUpdatePreviewBodySchema,
   createQuestionBodySchema,
   importConfirmBodySchema,
   importTemplateQuerySchema,
@@ -15,8 +21,10 @@ import {
   listMetaTopicsQuerySchema,
   listQuestionsQuerySchema,
   questionIdParamsSchema,
+  requestChangesBodySchema,
   updateQuestionBodySchema,
   updateQuestionStatusBodySchema,
+  versionParamsSchema,
 } from '../../validators/question.validator'
 
 const router = Router()
@@ -29,6 +37,14 @@ const router = Router()
 // `content_editor`/`admin`/`super_admin` — `moderator`/`support` may view the
 // question bank but never edit it.
 const canManageQuestions = authorizeRoles('content_editor', 'admin', 'super_admin')
+
+// Sprint 4 Step 71.5 — Content Workflow. `moderator` gets its first real
+// write path on Questions here, deliberately narrow: it may review/gate
+// content (approve or request changes) but still can't touch content
+// fields directly (`canManageQuestions` above is unchanged). `admin`+ only
+// for the final "Admin Approval -> Published" step.
+const canReviewQuestions = authorizeRoles('moderator', 'admin', 'super_admin')
+const canPublishQuestions = authorizeRoles('admin', 'super_admin')
 
 router.get(
   '/',
@@ -70,6 +86,73 @@ router.post(
   canManageQuestions,
   validate({ params: questionIdParamsSchema }),
   asyncHandler(adminQuestionsController.restoreQuestion),
+)
+
+// --- Content Workflow (Sprint 4 Step 71.5) --------------------------------
+router.post(
+  '/:id/submit-for-review',
+  canManageQuestions,
+  validate({ params: questionIdParamsSchema }),
+  asyncHandler(adminQuestionsController.submitForReview),
+)
+router.post(
+  '/:id/approve',
+  canReviewQuestions,
+  validate({ params: questionIdParamsSchema }),
+  asyncHandler(adminQuestionsController.approveQuestion),
+)
+router.post(
+  '/:id/request-changes',
+  canReviewQuestions,
+  validate({ params: questionIdParamsSchema, body: requestChangesBodySchema }),
+  asyncHandler(adminQuestionsController.requestChanges),
+)
+router.post(
+  '/:id/publish',
+  canPublishQuestions,
+  validate({ params: questionIdParamsSchema }),
+  asyncHandler(adminQuestionsController.publishQuestion),
+)
+
+// --- Version History (Sprint 4 Step 71.5) ---------------------------------
+// Reads carry the baseline admin gate only, same reasoning as the question
+// list/detail reads above. Rollback is a content mutation, gated the same
+// as any other content edit.
+router.get(
+  '/:id/versions',
+  validate({ params: questionIdParamsSchema }),
+  asyncHandler(adminQuestionsController.listVersions),
+)
+router.get(
+  '/:id/versions/:versionNumber',
+  validate({ params: versionParamsSchema }),
+  asyncHandler(adminQuestionsController.getVersion),
+)
+router.post(
+  '/:id/versions/:versionNumber/rollback',
+  canManageQuestions,
+  validate({ params: versionParamsSchema }),
+  asyncHandler(adminQuestionsController.rollback),
+)
+
+// --- Bulk Update / Bulk Delete (Sprint 4 Step 71.5) -----------------------
+router.post(
+  '/bulk-update/preview',
+  canManageQuestions,
+  validate({ body: bulkUpdatePreviewBodySchema }),
+  asyncHandler(adminQuestionsController.bulkUpdatePreview),
+)
+router.post(
+  '/bulk-update',
+  canManageQuestions,
+  validate({ body: bulkUpdateBodySchema }),
+  asyncHandler(adminQuestionsController.bulkUpdate),
+)
+router.post(
+  '/bulk-delete',
+  canManageQuestions,
+  validate({ body: bulkDeleteBodySchema }),
+  asyncHandler(adminQuestionsController.bulkDelete),
 )
 
 router.get('/meta/exams', asyncHandler(adminQuestionsController.listMetaExams))
@@ -116,6 +199,15 @@ router.post(
   uploadBulkImportFile.single('file'),
   validate({ body: importConfirmBodySchema }),
   asyncHandler(questionImportController.confirmImportHandler),
+)
+// Sprint 4 Step 71.5 — PDF metadata extraction only (confirmed scope: never
+// question-text parsing from PDF pages). A read-only assistive utility, not
+// part of the parse/preview/confirm pipeline above.
+router.post(
+  '/import/pdf-metadata',
+  canManageQuestions,
+  uploadPdfMetadataFile.single('file'),
+  asyncHandler(questionImportController.extractPdfMetadata),
 )
 
 export default router

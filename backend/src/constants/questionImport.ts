@@ -5,15 +5,36 @@
  * never drift apart on a column name.
  */
 export const IMPORT_MAX_FILE_SIZE_BYTES = 8 * 1024 * 1024
-export const IMPORT_MAX_ROWS = 2000
+// Sprint 4 Step 71.5 — raised from 2,000 to 10,000 (confirmed with the
+// user: reaching "100,000+ questions" happens via multiple imports over
+// time, the way real content operations work anyway — nobody reviews a
+// 100k-row preview table in one sitting — rather than building new
+// background-job infrastructure this codebase doesn't have yet).
+export const IMPORT_MAX_ROWS = 10000
 
+// Sprint 4 Step 71.5 — `.docx` (Word Bulk Import) joins this same allowlist
+// rather than getting a separate upload middleware: `/import/preview` and
+// `/import/confirm` (`routes/admin/questions.routes.ts`) are one shared
+// pair of routes for all three formats — `questionImport.service.ts`'s
+// `parseImportFile` is what dispatches to a format-specific parser
+// (`wordQuestionParser.ts` for `.docx`), not the upload middleware. A
+// `.docx` file rejected here would never even reach that dispatch.
 export const IMPORT_ALLOWED_MIME_TYPES = new Set([
   'text/csv',
   'application/csv',
   'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ])
-export const IMPORT_ALLOWED_EXTENSIONS = new Set(['.csv', '.xlsx'])
+export const IMPORT_ALLOWED_EXTENSIONS = new Set(['.csv', '.xlsx', '.docx'])
+
+/** Sprint 4 Step 71.5 — PDF metadata extraction. Small ceiling — this reads
+ * only the document `Info` dictionary (`services/admin/pdfMetadata.service.ts`),
+ * never stores or re-serves the file, so there's no reason to accept
+ * anything near `uploadStudyMaterialFile`'s 20MB ceiling. */
+export const PDF_METADATA_MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024
+export const PDF_METADATA_ALLOWED_MIME_TYPES = new Set(['application/pdf'])
+export const PDF_METADATA_ALLOWED_EXTENSIONS = new Set(['.pdf'])
 
 export interface ImportColumnDef {
   /** Internal field key the parser looks the column up by (case-insensitive

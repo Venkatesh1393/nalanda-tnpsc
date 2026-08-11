@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   CheckCircle2,
   Download,
+  FileText,
   FileWarning,
   Upload,
 } from 'lucide-react'
@@ -19,10 +20,12 @@ import { ROUTES } from '@/constants/routes'
 import {
   confirmImport,
   downloadImportTemplate,
+  extractPdfMetadata,
   previewImport,
   type ImportConfirmResult,
   type ImportPreviewResult,
   type ImportRowClientView,
+  type PdfMetadataResult,
 } from '@/services/adminQuestionsService'
 
 type RowFilter = 'all' | 'valid' | 'invalid' | 'duplicate'
@@ -104,6 +107,14 @@ export function QuestionImportPage() {
   const [filterTab, setFilterTab] = useState<RowFilter>('all')
   const [confirmResult, setConfirmResult] = useState<ImportConfirmResult | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  const [pdfFile, setPdfFile] = useState<File | null>(null)
+  const [pdfMetadata, setPdfMetadata] = useState<PdfMetadataResult | null>(null)
+  const pdfMetadataMutation = useMutation({
+    mutationFn: (selectedFile: File) => extractPdfMetadata(selectedFile),
+    onSuccess: (result) => setPdfMetadata(result),
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
 
   const previewMutation = useMutation({
     mutationFn: (selectedFile: File) => previewImport(selectedFile),
@@ -191,6 +202,13 @@ export function QuestionImportPage() {
           >
             <Download /> Download XLSX template
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => void downloadImportTemplate('docx')}
+          >
+            <Download /> Download Word template
+          </Button>
         </CardContent>
       </Card>
 
@@ -202,10 +220,14 @@ export function QuestionImportPage() {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv,.xlsx"
+            accept=".csv,.xlsx,.docx"
             className="text-sm"
             onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
           />
+          <p className="text-muted-foreground text-xs">
+            CSV, XLSX, or Word (.docx — must follow the downloadable Word template's
+            structure; a freeform document won't parse).
+          </p>
           <div>
             <Button
               size="sm"
@@ -216,6 +238,60 @@ export function QuestionImportPage() {
               <Upload /> Parse &amp; Preview
             </Button>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">
+            Extract PDF Metadata{' '}
+            <span className="text-muted-foreground font-normal">(optional)</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-3">
+          <p className="text-muted-foreground text-sm">
+            Reads a PDF's document properties only (title/author/date) — never attempts to
+            extract question text from PDF pages. Use it to look up a source PYQ paper's
+            year/title before filling in a CSV/XLSX/Word import.
+          </p>
+          <input
+            type="file"
+            accept=".pdf"
+            className="text-sm"
+            onChange={(e) => {
+              setPdfFile(e.target.files?.[0] ?? null)
+              setPdfMetadata(null)
+            }}
+          />
+          <div>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={!pdfFile}
+              loading={pdfMetadataMutation.isPending}
+              onClick={() => pdfFile && pdfMetadataMutation.mutate(pdfFile)}
+            >
+              <FileText /> Extract Metadata
+            </Button>
+          </div>
+          {pdfMetadata && (
+            <dl className="bg-muted/40 grid grid-cols-2 gap-x-4 gap-y-1 rounded-md p-3 text-sm">
+              <dt className="text-muted-foreground">Title</dt>
+              <dd>{pdfMetadata.title ?? '—'}</dd>
+              <dt className="text-muted-foreground">Author</dt>
+              <dd>{pdfMetadata.author ?? '—'}</dd>
+              <dt className="text-muted-foreground">Creation date</dt>
+              <dd>{pdfMetadata.creationDate ?? '—'}</dd>
+              <dt className="text-muted-foreground">Pages</dt>
+              <dd>{pdfMetadata.pageCount}</dd>
+              {pdfMetadata.suggestedPyqYear && (
+                <>
+                  <dt className="text-muted-foreground">Suggested PYQ year</dt>
+                  <dd>{pdfMetadata.suggestedPyqYear}</dd>
+                </>
+              )}
+            </dl>
+          )}
         </CardContent>
       </Card>
 

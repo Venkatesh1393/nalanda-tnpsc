@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { PAYMENT_STATUSES } from '../constants/commerce'
 import { ADMIN_ACCESS_ROLES, ROLES, SUBSCRIPTION_TIERS } from '../constants/roles'
 import { USER_STATUSES } from '../constants/user'
+import { SYSTEM_EVENT_SEVERITIES, SYSTEM_EVENT_TYPES } from '../models/SystemEvent.model'
 
 export const listUsersQuerySchema = z.object({
   search: z.string().trim().min(1).max(200).optional(),
@@ -99,3 +100,19 @@ export const aiUsageDashboardQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).default(10),
 })
 export type AiUsageDashboardQuery = z.infer<typeof aiUsageDashboardQuerySchema>
+
+/** Sprint 4 Step 74 — Admin Payments/Monitoring stats. Same `days`-window
+ * shape as `aiUsageDashboardQuerySchema` above, for consistency. */
+export const statsWindowQuerySchema = z.object({
+  days: z.coerce.number().int().min(1).max(90).default(7),
+})
+export type StatsWindowQuery = z.infer<typeof statsWindowQuerySchema>
+
+export const listSystemEventsQuerySchema = z.object({
+  type: z.enum(SYSTEM_EVENT_TYPES).optional(),
+  severity: z.enum(SYSTEM_EVENT_SEVERITIES).optional(),
+  days: z.coerce.number().int().min(1).max(90).default(7),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+})
+export type ListSystemEventsQuery = z.infer<typeof listSystemEventsQuerySchema>

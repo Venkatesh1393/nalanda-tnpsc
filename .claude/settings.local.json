@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "PowerShell(npm run build)",
-      "PowerShell(npm run format)"
+      "PowerShell(npm run format)",
+      "Bash(npx prettier *)"
     ]
   }
 }

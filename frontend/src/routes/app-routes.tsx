@@ -294,7 +294,19 @@ export function AppRoutes() {
           </Route>
         </Route>
 
-        <Route path="/dev/preview" element={<DevPreviewPage />} />
+        {/* Sprint 4 Step 71 — a production build no longer wires this route
+         * up at all (the catch-all below now owns `/dev/preview` there too),
+         * so the internal design-system preview screen has no reachable,
+         * navigable URL in production. `import.meta.env.DEV` is the same
+         * build-time constant `providers/app-providers.tsx` already uses to
+         * gate `ReactQueryDevtools`. Note this only removes the *route* —
+         * `DevPreviewPage`'s lazy chunk still ships as an unlinked file in
+         * `dist/assets/` (Rollup can't prove a dynamic `import()` is
+         * unreachable from a conditional JSX branch alone), so this is a
+         * "no live URL" fix, not a "zero bytes shipped" one. */}
+        {import.meta.env.DEV && (
+          <Route path="/dev/preview" element={<DevPreviewPage />} />
+        )}
         <Route path="*" element={<NotFoundRoute />} />
       </Routes>
     </Suspense>

@@ -328,8 +328,10 @@ export async function generateQuestions(
     customInstructions: input.customInstructions,
   }
 
+  const generationStartedAt = Date.now()
   try {
     const { parsed, tokenUsage } = await generateWithFallback(params)
+    const latencyMs = Date.now() - generationStartedAt
     const estimatedCostUsd = estimateCostUsd(
       AI_MODEL,
       tokenUsage.inputTokens,
@@ -379,6 +381,7 @@ export async function generateQuestions(
       status: 'success',
       tokenUsage,
       estimatedCostUsd,
+      latencyMs,
       outputSummary: `Generated ${created.length} draft question(s) awaiting review.`,
       expiresAt: historyExpiry(),
     })
@@ -408,6 +411,7 @@ export async function generateQuestions(
       source: 'generated',
       status: 'failure',
       errorMessage,
+      latencyMs: Date.now() - generationStartedAt,
       expiresAt: historyExpiry(),
     })
     throw new ApiError(

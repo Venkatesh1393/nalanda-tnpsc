@@ -371,8 +371,10 @@ async function explainQuestionUncached(
       : null,
   }
 
+  const generationStartedAt = Date.now()
   try {
     const { parsed, tokenUsage } = await generateExplanationWithFallback(context)
+    const latencyMs = Date.now() - generationStartedAt
     const estimatedCostUsd = estimateCostUsd(
       AI_MODEL,
       tokenUsage.inputTokens,
@@ -405,6 +407,7 @@ async function explainQuestionUncached(
       status: 'success',
       tokenUsage,
       estimatedCostUsd,
+      latencyMs,
       expiresAt: historyExpiry(),
     })
 
@@ -434,6 +437,7 @@ async function explainQuestionUncached(
       source: 'generated',
       status: 'failure',
       errorMessage,
+      latencyMs: Date.now() - generationStartedAt,
       expiresAt: historyExpiry(),
     })
     throw new ApiError(

@@ -143,3 +143,26 @@ export async function listForAdmin(
   ])
   return { items, total }
 }
+
+/** Sprint 4 Step 74 — Admin Payments monitoring ("successful/failures").
+ * One row per status actually present in the window — a status with zero
+ * occurrences simply doesn't appear, same "don't fabricate a zero row"
+ * discipline as `aiHistoryRepository`'s summary. */
+export async function getStatusCountsSince(
+  since: Date,
+): Promise<Array<{ status: PaymentStatus; count: number; amount: number }>> {
+  const rows = await Payment.aggregate<{ _id: PaymentStatus; count: number; amount: number }>([
+    { $match: { createdAt: { $gte: since } } },
+    { $group: { _id: '$status', count: { $sum: 1 }, amount: { $sum: '$amount' } } },
+  ])
+  return rows.map(({ _id, count, amount }) => ({ status: _id, count, amount }))
+}
+
+/** Most recent failures, for a monitoring dashboard's "what just broke"
+ * view — never includes `razorpaySignature` (already `select: false` by
+ * default on the schema). */
+export function listRecentFailures(since: Date, limit: number): Promise<PaymentDocument[]> {
+  return Payment.find({ status: 'failed', createdAt: { $gte: since } })
+    .sort({ createdAt: -1 })
+    .limit(limit)
+}

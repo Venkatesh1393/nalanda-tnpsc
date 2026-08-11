@@ -4,7 +4,10 @@ import * as adminPaymentsController from '../../controllers/admin/adminPayments.
 import { authorizeRoles } from '../../middleware/rbac.middleware'
 import { validate } from '../../middleware/validate.middleware'
 import { asyncHandler } from '../../utils/asyncHandler'
-import { listAdminPaymentsQuerySchema } from '../../validators/admin.validator'
+import {
+  listAdminPaymentsQuerySchema,
+  statsWindowQuerySchema,
+} from '../../validators/admin.validator'
 import { paymentIdParamsSchema } from '../../validators/payments.validator'
 
 /**
@@ -22,6 +25,16 @@ router.get(
   canViewPayments,
   validate({ query: listAdminPaymentsQuerySchema }),
   asyncHandler(adminPaymentsController.listPayments),
+)
+
+// Sprint 4 Step 74 — Production Monitoring. Registered BEFORE `/:paymentId`
+// so `/stats` is never swallowed by the param route and validated as a
+// (necessarily-invalid) ObjectId.
+router.get(
+  '/stats',
+  canViewPayments,
+  validate({ query: statsWindowQuerySchema }),
+  asyncHandler(adminPaymentsController.getPaymentStats),
 )
 
 router.get(

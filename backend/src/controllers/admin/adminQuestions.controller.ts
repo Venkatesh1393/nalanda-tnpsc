@@ -1,14 +1,22 @@
 import type { Request, Response } from 'express'
 
 import * as adminQuestionsService from '../../services/admin/adminQuestions.service'
+import * as questionBulkActionsService from '../../services/admin/questionBulkActions.service'
+import * as questionVersionService from '../../services/admin/questionVersion.service'
+import * as questionWorkflowService from '../../services/admin/questionWorkflow.service'
 import { ApiError } from '../../utils/ApiError'
 import { sendSuccess } from '../../utils/ApiResponse'
 import type {
+  BulkDeleteBody,
+  BulkUpdateBody,
+  BulkUpdatePreviewBody,
   CreateQuestionBody,
   ListQuestionsQuery,
   QuestionIdParams,
+  RequestChangesBody,
   UpdateQuestionBody,
   UpdateQuestionStatusBody,
+  VersionParams,
 } from '../../validators/question.validator'
 
 /** Every handler requires `req.user` — guaranteed by `authenticate` +
@@ -86,6 +94,80 @@ export async function restoreQuestion(req: Request, res: Response): Promise<void
   const { id } = req.params as unknown as QuestionIdParams
   const question = await adminQuestionsService.restoreQuestion(actor, id)
   sendSuccess(res, question)
+}
+
+// --- Content Workflow (Sprint 4 Step 71.5) --------------------------------
+
+export async function submitForReview(req: Request, res: Response): Promise<void> {
+  const actor = requireActor(req)
+  const { id } = req.params as unknown as QuestionIdParams
+  const question = await questionWorkflowService.submitForReview(actor, id)
+  sendSuccess(res, question)
+}
+
+export async function approveQuestion(req: Request, res: Response): Promise<void> {
+  const actor = requireActor(req)
+  const { id } = req.params as unknown as QuestionIdParams
+  const question = await questionWorkflowService.approveQuestion(actor, id)
+  sendSuccess(res, question)
+}
+
+export async function requestChanges(req: Request, res: Response): Promise<void> {
+  const actor = requireActor(req)
+  const { id } = req.params as unknown as QuestionIdParams
+  const { reason } = req.body as RequestChangesBody
+  const question = await questionWorkflowService.requestChanges(actor, id, reason)
+  sendSuccess(res, question)
+}
+
+export async function publishQuestion(req: Request, res: Response): Promise<void> {
+  const actor = requireActor(req)
+  const { id } = req.params as unknown as QuestionIdParams
+  const question = await questionWorkflowService.publishQuestion(actor, id)
+  sendSuccess(res, question)
+}
+
+// --- Version History (Sprint 4 Step 71.5) ---------------------------------
+
+export async function listVersions(req: Request, res: Response): Promise<void> {
+  const { id } = req.params as unknown as QuestionIdParams
+  const versions = await questionVersionService.listVersions(id)
+  sendSuccess(res, versions)
+}
+
+export async function getVersion(req: Request, res: Response): Promise<void> {
+  const { id, versionNumber } = req.params as unknown as VersionParams
+  const version = await questionVersionService.getVersion(id, versionNumber)
+  sendSuccess(res, version)
+}
+
+export async function rollback(req: Request, res: Response): Promise<void> {
+  const actor = requireActor(req)
+  const { id, versionNumber } = req.params as unknown as VersionParams
+  const question = await questionVersionService.rollback(actor, id, versionNumber)
+  sendSuccess(res, question)
+}
+
+// --- Bulk Update / Bulk Delete (Sprint 4 Step 71.5) -----------------------
+
+export async function bulkUpdatePreview(req: Request, res: Response): Promise<void> {
+  const { questionIds } = req.body as BulkUpdatePreviewBody
+  const result = await questionBulkActionsService.bulkUpdatePreview(questionIds)
+  sendSuccess(res, result)
+}
+
+export async function bulkUpdate(req: Request, res: Response): Promise<void> {
+  const actor = requireActor(req)
+  const { questionIds, patch } = req.body as BulkUpdateBody
+  const result = await questionBulkActionsService.bulkUpdate(actor, questionIds, patch)
+  sendSuccess(res, result)
+}
+
+export async function bulkDelete(req: Request, res: Response): Promise<void> {
+  const actor = requireActor(req)
+  const { questionIds } = req.body as BulkDeleteBody
+  const result = await questionBulkActionsService.bulkDelete(actor, questionIds)
+  sendSuccess(res, result)
 }
 
 // --- Cascading filter-dropdown metadata ---

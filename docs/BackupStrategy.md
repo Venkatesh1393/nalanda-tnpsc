@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Document Owner** | Backend/Platform |
-| **Status** | Sprint 4 Step 69 — Production Deployment |
-| **Last Updated** | 2026-08-10 |
+| **Status** | Sprint 4 Step 73 — Production Cloud Services (extends Step 69) |
+| **Last Updated** | 2026-08-11 |
 
 What gets backed up, how often, where to, and — just as important — what is
 **not yet** backed up today. Contains no credentials; every command below
@@ -38,20 +38,51 @@ assuming either:
 ### 2.1 On a free/shared tier (M0/M2/M5) — today's likely reality
 Atlas's automated **Continuous Backup / Cloud Backup snapshots are not
 available** on these tiers — there is no built-in point-in-time recovery.
-The practical mitigation:
+The practical mitigation, **built and live-verified in Sprint 4 Step 73**:
 
-- **Scheduled `mongodump` exports.** A small script (not built yet — a
-  concrete follow-up, not fabricated as already existing) running
-  `mongodump --uri="$MONGODB_URI" --gzip --archive=backup-$(date +%F).gz`
-  on a daily cron/scheduled GitHub Actions workflow, uploading the archive
-  to external storage (S3, Google Cloud Storage, or even a private
-  Cloudinary raw-resource bucket) with the connection string supplied only
-  via a secret at run time, never committed.
-- **Retention**: keep at minimum the last 7 daily + last 4 weekly archives;
-  delete older ones automatically so storage cost doesn't grow unbounded.
-- **Restore drill**: periodically actually restore a dump into a scratch
-  cluster/database (`mongorestore --uri="$SCRATCH_URI"`) and spot-check it —
-  an untested backup is not a backup.
+- **`npm run backup:database`** (`backend/src/scripts/backupDatabase.ts`) —
+  connects via the driver already in `node_modules` (no separate MongoDB
+  Database Tools install required, unlike `mongodump`) and streams every
+  collection to `backend/backups/<timestamp>-<db>/` as gzip-compressed,
+  newline-delimited Extended JSON (`EJSON` — the same lossless, BSON-safe
+  text format `mongoexport --jsonFormat=canonical` produces; ObjectIds/Dates
+  round-trip exactly). A `manifest.json` per run records each collection's
+  document count and index definitions. Not run against a schedule yet —
+  see the automation gap below.
+- **Retention**: the script keeps the newest **7** backup runs and deletes
+  older ones automatically (`RETENTION_COUNT` in the script) — verified in
+  this step's live run.
+- **Restore drill — actually performed**, not just scripted: `npm run
+  restore:database -- --archive <path>` (dry run by default; `--confirm` to
+  write) was run against this step's own live backup, targeted at a single
+  collection, into the *same* database it came from — the expected "restore
+  into a non-empty database" case. It correctly reported `0 inserted / N
+  skipped (duplicate _id)` for every document and left the collection's
+  count unchanged, confirming both the read path (EJSON round-trips
+  correctly) and the duplicate-safe write path work.
+- **Prefer `mongodump`/`mongorestore` instead?** Still a valid, arguably
+  more standard alternative if MongoDB Database Tools are already on the
+  ops host: `mongodump --uri="$MONGODB_URI" --gzip
+  --archive=backup-$(date +%F).gz` / `mongorestore --uri="$SCRATCH_URI"
+  --gzip --archive=...`. Documented here as an option, not built, since the
+  tool isn't installed in this project's dev environment and its BSON
+  archive format can't be verified from here the way the script above was.
+- **Automation gap, disclosed**: neither approach runs on a schedule yet —
+  `npm run backup:database` must currently be triggered manually or wired
+  into a cron job / Windows Task Scheduler entry / scheduled CI workflow on
+  whichever host ends up owning this. The command itself is done and
+  tested; only "runs automatically, unattended, on a timer" remains.
+  Suggested cron line once a production host exists: `0 3 * * *
+  cd /path/to/backend && npm run backup:database >> logs/backup.log 2>&1`.
+  `docs/AlertingStrategy.md` §2.7 (Sprint 4 Step 74) specifies exactly when
+  a failed/missing scheduled run should page vs. alert — worth wiring up
+  the moment this cron job exists, not after the first missed backup goes
+  unnoticed.
+- **Off-host storage still not wired up**: today's backups land on the same
+  host running the app — real durability needs them shipped to external
+  storage (S3, GCS, or similar) so a full host loss doesn't take the
+  backups with it. Not built this step; the local script is the foundation
+  that off-host shipping would upload from.
 
 ### 2.2 Once upgraded to M10+ (recommended before real production launch)
 Atlas's **Continuous Backup** becomes available: automatic, incremental,
@@ -127,11 +158,13 @@ which is expected, not a bug.
 | Data | Backed up today? | Mechanism | Frequency |
 |---|---|---|---|
 | Source code | **No** | none — §1 is the fix | n/a |
-| MongoDB (production data) | **No** (free/shared tier has no automated snapshot) | manual `mongodump` — not yet scripted | recommend daily once scripted |
+| MongoDB (production data) | **Script built + restore-drill verified; not yet scheduled** | `npm run backup:database` (EJSON/gzip, 7-run retention) | manual today — recommend daily via cron once a host exists |
 | Cloudinary assets | Durable at the provider level; no app-side backup | Cloudinary's own replication | continuous (provider-side) |
 | Firebase users | Durable at the provider level | Google-managed | continuous (provider-side) |
 | Secrets/config | Depends entirely on where the user stores `.env` today | none standardized yet | n/a |
 
-This table is intentionally blunt about what's real vs. aspirational —
-treating §1 and the M0/M2/M5 `mongodump` gap in §2.1 as the two concrete,
-prioritized follow-ups from this step, not implying they're already solved.
+This table is intentionally blunt about what's real vs. aspirational. §1
+(no git) remains the single biggest gap. §2's MongoDB backup moved from
+"not scripted" to "scripted and restore-tested" this step — what's left
+there is purely operational (schedule it, ship copies off-host), not
+missing code.

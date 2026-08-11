@@ -59,6 +59,15 @@ const aiTokenUsageSchema = new Schema<IAiTokenUsage>(
  * Sprint 3 Step 42 scaffold) are used for the first time here, holding a
  * short truncated preview of the turn for quality-review purposes — never
  * the full message, and never the system prompt.
+ *
+ * `latencyMs` added for Sprint 4 Step 74 (Production Monitoring) — wall-clock
+ * time of the actual provider call (`client.messages.parse(...)`, including
+ * the SDK's own internal retries), measured at each of the three call sites
+ * (`services/ai/questionExplanation.service.ts`,
+ * `services/ai/aiTutor.service.ts`,
+ * `services/admin/adminAiQuestionGenerator.service.ts`). Left `undefined`
+ * for rows where no provider call was attempted (daily-quota-exceeded,
+ * provider-not-configured) — those have no latency to report, not a zero.
  */
 export interface IAIHistory {
   userId: Types.ObjectId
@@ -75,6 +84,7 @@ export interface IAIHistory {
   status?: AiHistoryStatus
   tokenUsage?: IAiTokenUsage
   estimatedCostUsd?: number | null
+  latencyMs?: number
   errorMessage?: string
   inputSummary?: string
   outputSummary?: string
@@ -99,6 +109,7 @@ const aiHistorySchema = new Schema<IAIHistory>(
     status: { type: String, enum: AI_HISTORY_STATUSES },
     tokenUsage: { type: aiTokenUsageSchema },
     estimatedCostUsd: { type: Number, default: undefined },
+    latencyMs: { type: Number, min: 0, default: undefined },
     errorMessage: { type: String, trim: true, maxlength: 500 },
     inputSummary: { type: String, trim: true },
     outputSummary: { type: String, trim: true },

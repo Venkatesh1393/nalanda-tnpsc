@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | **Document Owner** | Backend/Platform |
-| **Status** | Sprint 4 Step 69 — Production Deployment |
-| **Last Updated** | 2026-08-10 |
-| **Depends on** | `docs/BackupStrategy.md`, `docs/MonitoringStrategy.md`, `docs/Deployment.md` |
+| **Status** | Sprint 4 Step 74 — Production Monitoring (extends Step 69) |
+| **Last Updated** | 2026-08-11 |
+| **Depends on** | `docs/BackupStrategy.md`, `docs/MonitoringStrategy.md`, `docs/AlertingStrategy.md`, `docs/Deployment.md` |
 
 How this system responds to real failures, and how to bring it back. Read
 `docs/BackupStrategy.md` first — the recovery procedures here assume its
@@ -62,8 +62,13 @@ restarting on a loop.
 (`docs/MonitoringStrategy.md` §2) for the actual exception —
 `server.ts`'s `uncaughtException`/`unhandledRejection` handlers
 (`docs/Deployment.md` §4) always log the real error before exiting, so the
-cause should never be silent. If the crash is triggered by a bad deploy,
-see §2.7 (Rollback) below rather than debugging live in production.
+cause should never be silent. `GET /admin/monitoring/events?type=error`
+(Sprint 4 Step 74, `docs/MonitoringStrategy.md` §3) gives the same
+information queryable through the API instead of shelling into the host —
+useful the moment host access is inconvenient (a managed platform, a
+teammate without SSH access) or the container has already been recreated
+and its local log files are gone. If the crash is triggered by a bad
+deploy, see §2.7 (Rollback) below rather than debugging live in production.
 
 ### 2.4 Cloudinary outage
 **Symptom**: uploads (avatar, question/current-affairs images, study
@@ -134,3 +139,17 @@ After any scenario above that involved real user impact: write down what
 happened, when, and what fixed it (even briefly) somewhere durable — this
 document doesn't currently have an incident log, and starting one the first
 time it's actually needed is the right moment to add it, not before.
+`GET /admin/monitoring/events` (Sprint 4 Step 74) is a real, queryable
+timeline of errors/slow requests/slow queries/webhook failures around the
+incident window — a useful starting point for reconstructing what happened
+even without a dedicated incident log.
+
+**Nothing in this document pages anyone yet.** Every symptom above is
+something a human has to notice (an uptime-monitor alert once one's
+configured — §1 of `docs/MonitoringStrategy.md`, still not wired up as of
+this step — or someone happening to check). `docs/AlertingStrategy.md`
+(new, Sprint 4 Step 74) is the concrete specification for closing that gap:
+exact thresholds per signal, which ones should page vs. just alert, and
+what implementing real notifications would take. Until that's built, "was
+anyone notified" for any scenario above still means "did someone go
+looking."

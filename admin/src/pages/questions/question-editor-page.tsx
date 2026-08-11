@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, History, Plus, RotateCcw, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -15,18 +15,27 @@ import { Select } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { ROUTES } from '@/constants/routes'
+import { useAuth } from '@/hooks/use-auth'
 import {
+  approveQuestion,
   createQuestion,
   getQuestion,
   listMetaExams,
   listMetaSubjects,
   listMetaSubtopics,
   listMetaTopics,
+  listQuestionVersions,
+  publishQuestion,
+  requestQuestionChanges,
+  rollbackQuestionVersion,
+  submitQuestionForReview,
   updateQuestion,
+  type AdminQuestion,
   type QuestionDifficulty,
   type QuestionInput,
   type QuestionSource,
   type QuestionType,
+  type QuestionVersion,
   type TnpscExamStage,
 } from '@/services/adminQuestionsService'
 
@@ -53,6 +62,313 @@ function extractErrorMessage(error: unknown): string {
 
 function pickText(text: { en?: string; ta?: string } | undefined): string {
   return text?.en || text?.ta || '—'
+}
+
+const WORKFLOW_BADGE: Record<
+  AdminQuestion['workflow']['status'],
+  'outline' | 'warning' | 'success'
+> = {
+  draft: 'outline',
+  pending_review: 'warning',
+  approved: 'outline',
+  published: 'success',
+}
+
+/**
+ * Sprint 4 Step 71.5 — Content Workflow card. Only the buttons the current
+ * user's role can actually invoke are shown (`canManageQuestions`/
+ * `canReviewQuestions`/`canPublishQuestions` below mirror the exact same
+ * role sets `routes/admin/questions.routes.ts` enforces server-side — this
+ * is a UX convenience, the backend is the real boundary regardless of what
+ * this component renders). A `moderator` sees only Approve/Request Changes;
+ * an `admin`/`super_admin` sees everything; a `content_editor` sees only
+ * Submit for Review.
+ */
+function WorkflowCard({
+  question,
+  onChanged,
+}: {
+  question: AdminQuestion
+  onChanged: () => void
+}) {
+  const { user } = useAuth()
+  const role = user?.role
+  const canManage =
+    role === 'content_editor' || role === 'admin' || role === 'super_admin'
+  const canReview = role === 'moderator' || role === 'admin' || role === 'super_admin'
+  const canPublish = role === 'admin' || role === 'super_admin'
+
+  const [isRequestingChanges, setIsRequestingChanges] = useState(false)
+  const [reason, setReason] = useState('')
+  const [error, setError] = useState<string | null>(null)
+
+  const submitMutation = useMutation({
+    mutationFn: () => submitQuestionForReview(question.id),
+    onSuccess: () => {
+      setError(null)
+      onChanged()
+    },
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+  const approveMutation = useMutation({
+    mutationFn: () => approveQuestion(question.id),
+    onSuccess: () => {
+      setError(null)
+      onChanged()
+    },
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+  const requestChangesMutation = useMutation({
+    mutationFn: () => requestQuestionChanges(question.id, reason.trim()),
+    onSuccess: () => {
+      setError(null)
+      setIsRequestingChanges(false)
+      setReason('')
+      onChanged()
+    },
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+  const publishMutation = useMutation({
+    mutationFn: () => publishQuestion(question.id),
+    onSuccess: () => {
+      setError(null)
+      onChanged()
+    },
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+
+  const { status } = question.workflow
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">Workflow</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant={WORKFLOW_BADGE[status]} className="capitalize">
+            {status.replace('_', ' ')}
+          </Badge>
+          {question.workflow.submittedAt && (
+            <span className="text-muted-foreground text-xs">
+              Submitted {new Date(question.workflow.submittedAt).toLocaleString('en-IN')}
+            </span>
+          )}
+          {question.workflow.reviewedAt && (
+            <span className="text-muted-foreground text-xs">
+              · Reviewed {new Date(question.workflow.reviewedAt).toLocaleString('en-IN')}
+            </span>
+          )}
+          {question.workflow.publishedAt && (
+            <span className="text-muted-foreground text-xs">
+              · Published{' '}
+              {new Date(question.workflow.publishedAt).toLocaleString('en-IN')}
+            </span>
+          )}
+        </div>
+
+        {question.workflow.reviewNote && status === 'draft' && (
+          <p className="bg-warning/10 text-warning-foreground rounded-md p-2.5 text-sm">
+            Changes requested: {question.workflow.reviewNote}
+          </p>
+        )}
+
+        {error && (
+          <p className="bg-destructive/10 text-destructive rounded-md p-2.5 text-sm">
+            {error}
+          </p>
+        )}
+
+        <div className="flex flex-wrap gap-2">
+          {canManage && status === 'draft' && (
+            <Button
+              size="sm"
+              loading={submitMutation.isPending}
+              onClick={() => submitMutation.mutate()}
+            >
+              Submit for Review
+            </Button>
+          )}
+          {canReview && status === 'pending_review' && (
+            <>
+              <Button
+                size="sm"
+                loading={approveMutation.isPending}
+                onClick={() => approveMutation.mutate()}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setIsRequestingChanges((current) => !current)}
+              >
+                Request Changes
+              </Button>
+            </>
+          )}
+          {canPublish && status === 'approved' && (
+            <Button
+              size="sm"
+              loading={publishMutation.isPending}
+              onClick={() => publishMutation.mutate()}
+            >
+              Publish
+            </Button>
+          )}
+        </div>
+
+        {isRequestingChanges && (
+          <div className="flex flex-col gap-2">
+            <Textarea
+              placeholder="Reason (required) — what needs to change before this can be approved?"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              rows={2}
+            />
+            <Button
+              size="sm"
+              variant="destructive"
+              className="w-fit"
+              disabled={!reason.trim()}
+              loading={requestChangesMutation.isPending}
+              onClick={() => requestChangesMutation.mutate()}
+            >
+              Send Back to Draft
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+/**
+ * Sprint 4 Step 71.5 — Version History card. Full-document content
+ * snapshots (backend `QuestionVersion.model.ts`'s header comment explains
+ * why not field-level diffs), append-only — a rollback creates a new
+ * version rather than deleting anything newer.
+ */
+function VersionHistoryCard({
+  questionId,
+  onRolledBack,
+}: {
+  questionId: string
+  onRolledBack: () => void
+}) {
+  const [expandedVersion, setExpandedVersion] = useState<number | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const { data: versions, isPending } = useQuery({
+    queryKey: ['admin', 'questions', questionId, 'versions'],
+    queryFn: () => listQuestionVersions(questionId),
+  })
+
+  const rollbackMutation = useMutation({
+    mutationFn: (versionNumber: number) =>
+      rollbackQuestionVersion(questionId, versionNumber),
+    onSuccess: () => {
+      setError(null)
+      onRolledBack()
+    },
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-1.5 text-base">
+          <History className="size-4" aria-hidden="true" /> Version History
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        {error && (
+          <p className="bg-destructive/10 text-destructive rounded-md p-2.5 text-sm">
+            {error}
+          </p>
+        )}
+        {isPending ? (
+          <Skeleton className="h-16 w-full" />
+        ) : !versions || versions.length === 0 ? (
+          <p className="text-muted-foreground text-sm">No version history yet.</p>
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {versions.map((version: QuestionVersion) => (
+              <li key={version.versionNumber} className="rounded-lg border p-2.5 text-sm">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <span className="font-medium">v{version.versionNumber}</span>{' '}
+                    <span className="text-muted-foreground capitalize">
+                      {version.changeType}
+                    </span>{' '}
+                    <span className="text-muted-foreground text-xs">
+                      by {version.changedByEmail}
+                      {version.createdAt &&
+                        ` · ${new Date(version.createdAt).toLocaleString('en-IN')}`}
+                    </span>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setExpandedVersion((current) =>
+                          current === version.versionNumber
+                            ? null
+                            : version.versionNumber,
+                        )
+                      }
+                    >
+                      {expandedVersion === version.versionNumber ? 'Hide' : 'View'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      loading={
+                        rollbackMutation.isPending &&
+                        rollbackMutation.variables === version.versionNumber
+                      }
+                      onClick={() => {
+                        if (
+                          confirm(
+                            `Roll back to version ${version.versionNumber}? This creates a new version restoring that content.`,
+                          )
+                        ) {
+                          rollbackMutation.mutate(version.versionNumber)
+                        }
+                      }}
+                    >
+                      <RotateCcw className="size-3.5" aria-hidden="true" /> Rollback
+                    </Button>
+                  </div>
+                </div>
+                {version.changeNote && (
+                  <p className="text-muted-foreground mt-1 text-xs">
+                    {version.changeNote}
+                  </p>
+                )}
+                {expandedVersion === version.versionNumber && (
+                  <div className="bg-muted/40 mt-2 rounded-md p-2 text-xs">
+                    <p className="font-medium">
+                      {pickText(version.snapshot.questionText)}
+                    </p>
+                    <ul className="mt-1 flex flex-col gap-0.5">
+                      {version.snapshot.options.map((option, i) => (
+                        <li key={option.optionId ?? i}>
+                          {option.isCorrect ? '✓ ' : '— '}
+                          {pickText(option.text)}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </CardContent>
+    </Card>
+  )
 }
 
 /**
@@ -326,6 +642,30 @@ export function QuestionEditorPage() {
       <h1 className="text-lg font-semibold">
         {isEditMode ? 'Edit Question' : 'New Question'}
       </h1>
+
+      {isEditMode && existing && (
+        <>
+          <WorkflowCard
+            question={existing}
+            onChanged={() =>
+              void queryClient.invalidateQueries({
+                queryKey: ['admin', 'questions', questionId],
+              })
+            }
+          />
+          <VersionHistoryCard
+            questionId={questionId as string}
+            onRolledBack={() => {
+              void queryClient.invalidateQueries({
+                queryKey: ['admin', 'questions', questionId],
+              })
+              void queryClient.invalidateQueries({
+                queryKey: ['admin', 'questions', questionId, 'versions'],
+              })
+            }}
+          />
+        </>
+      )}
 
       {formError && (
         <p className="bg-destructive/10 text-destructive rounded-md p-2.5 text-sm">

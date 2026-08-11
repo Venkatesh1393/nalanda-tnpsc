@@ -1,11 +1,13 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { FileUp, Plus, Search, Sparkles } from 'lucide-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { FileUp, Plus, Search, Sparkles, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
 import { EmptyState } from '@/components/empty-state'
 import { ErrorState } from '@/components/error-state'
 import { Input } from '@/components/ui/input'
@@ -14,6 +16,9 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ROUTES } from '@/constants/routes'
 import {
   archiveQuestion,
+  bulkDeleteQuestions,
+  bulkUpdateQuestions,
+  bulkUpdateQuestionsPreview,
   listMetaExams,
   listMetaSubjects,
   listMetaSubtopics,
@@ -22,7 +27,10 @@ import {
   restoreQuestion,
   updateQuestionStatus,
   type AdminQuestion,
+  type BulkUpdatePatch,
+  type BulkUpdatePreviewResult,
   type QuestionListFilter,
+  type WorkflowStatus,
 } from '@/services/adminQuestionsService'
 
 const STATUS_BADGE: Record<
@@ -32,6 +40,204 @@ const STATUS_BADGE: Record<
   active: 'success',
   inactive: 'warning',
   archived: 'destructive',
+}
+
+const WORKFLOW_BADGE: Record<WorkflowStatus, 'outline' | 'warning' | 'success'> = {
+  draft: 'outline',
+  pending_review: 'warning',
+  approved: 'outline',
+  published: 'success',
+}
+
+function extractErrorMessage(error: unknown): string {
+  if (axios.isAxiosError(error)) {
+    const message = (error.response?.data as { error?: { message?: string } } | undefined)
+      ?.error?.message
+    if (message) return message
+    return error.message
+  }
+  return error instanceof Error ? error.message : 'Something went wrong.'
+}
+
+/**
+ * Sprint 4 Step 71.5 — appears once ≥1 row is selected. `patch` only ever
+ * includes fields the admin actually touched ("No change" is the default
+ * for every field, per the backend's safe-field-allowlist scope — see
+ * `questionBulkActions.service.ts`'s header comment for why hierarchy/
+ * content-text fields aren't offered here at all). Preview is a required
+ * step before Confirm is enabled, matching this app's existing bulk-import
+ * "preview before commit" convention.
+ */
+function BulkActionsBar({
+  selectedIds,
+  onDone,
+}: {
+  selectedIds: string[]
+  onDone: () => void
+}) {
+  const [isActive, setIsActive] = useState('')
+  const [isPremium, setIsPremium] = useState('')
+  const [difficulty, setDifficulty] = useState('')
+  const [aiEligible, setAiEligible] = useState('')
+  const [tagsInput, setTagsInput] = useState('')
+  const [preview, setPreview] = useState<BulkUpdatePreviewResult | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  function buildPatch(): BulkUpdatePatch {
+    const patch: BulkUpdatePatch = {}
+    if (isActive) patch.isActive = isActive === 'true'
+    if (isPremium) patch.isPremium = isPremium === 'true'
+    if (difficulty) patch.difficulty = difficulty as BulkUpdatePatch['difficulty']
+    if (aiEligible) patch.aiExplanationEligible = aiEligible === 'true'
+    if (tagsInput.trim()) {
+      patch.tags = tagsInput
+        .split(/[|,]/)
+        .map((tag) => tag.trim())
+        .filter(Boolean)
+    }
+    return patch
+  }
+
+  const previewMutation = useMutation({
+    mutationFn: () => bulkUpdateQuestionsPreview(selectedIds),
+    onSuccess: (result) => {
+      setPreview(result)
+      setError(null)
+    },
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: () => bulkUpdateQuestions(selectedIds, buildPatch()),
+    onSuccess: () => {
+      setPreview(null)
+      onDone()
+    },
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: () => bulkDeleteQuestions(selectedIds),
+    onSuccess: () => onDone(),
+    onError: (err) => setError(extractErrorMessage(err)),
+  })
+
+  const hasPatch = Object.keys(buildPatch()).length > 0
+
+  return (
+    <Card>
+      <CardContent className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm font-medium">
+            {selectedIds.length} question{selectedIds.length === 1 ? '' : 's'} selected
+          </p>
+          <Button
+            variant="destructive"
+            size="sm"
+            loading={deleteMutation.isPending}
+            onClick={() => {
+              if (
+                confirm(
+                  `Archive ${selectedIds.length} question(s)? This can be undone individually via Restore.`,
+                )
+              ) {
+                deleteMutation.mutate()
+              }
+            }}
+          >
+            <Trash2 /> Bulk Delete (Archive)
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Select
+            className="w-40"
+            value={isActive}
+            onChange={(e) => setIsActive(e.target.value)}
+          >
+            <option value="">Active status: no change</option>
+            <option value="true">Set Active</option>
+            <option value="false">Set Inactive</option>
+          </Select>
+          <Select
+            className="w-40"
+            value={isPremium}
+            onChange={(e) => setIsPremium(e.target.value)}
+          >
+            <option value="">Premium: no change</option>
+            <option value="true">Set Premium</option>
+            <option value="false">Set Not Premium</option>
+          </Select>
+          <Select
+            className="w-40"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+          >
+            <option value="">Difficulty: no change</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </Select>
+          <Select
+            className="w-48"
+            value={aiEligible}
+            onChange={(e) => setAiEligible(e.target.value)}
+          >
+            <option value="">AI Explanation: no change</option>
+            <option value="true">Set Eligible</option>
+            <option value="false">Set Not Eligible</option>
+          </Select>
+          <Input
+            className="w-56"
+            placeholder="Replace tags (comma/pipe separated)"
+            value={tagsInput}
+            onChange={(e) => setTagsInput(e.target.value)}
+          />
+        </div>
+
+        {error && (
+          <p className="bg-destructive/10 text-destructive rounded-md p-2 text-sm">
+            {error}
+          </p>
+        )}
+
+        {preview && (
+          <div className="bg-muted/40 rounded-md p-2.5 text-sm">
+            <p>{preview.matchedCount} question(s) will be updated.</p>
+            {preview.sample.length > 0 && (
+              <ul className="mt-1 flex flex-col gap-0.5">
+                {preview.sample.map((s) => (
+                  <li key={s.id} className="text-muted-foreground line-clamp-1 text-xs">
+                    {s.questionTextEn}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!hasPatch}
+            loading={previewMutation.isPending}
+            onClick={() => previewMutation.mutate()}
+          >
+            Preview Update
+          </Button>
+          <Button
+            size="sm"
+            disabled={!preview || !hasPatch}
+            loading={updateMutation.isPending}
+            onClick={() => updateMutation.mutate()}
+          >
+            Confirm Update
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  )
 }
 
 function pickText(text: { en?: string; ta?: string }): string {
@@ -58,6 +264,7 @@ export function QuestionsListPage() {
   const [isPreviousYear, setIsPreviousYear] = useState('')
   const [page, setPage] = useState(1)
   const [pendingActionId, setPendingActionId] = useState<string | null>(null)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
 
   const { data: exams } = useQuery({
     queryKey: ['admin', 'questions', 'meta', 'exams'],
@@ -133,6 +340,29 @@ export function QuestionsListPage() {
     } finally {
       setPendingActionId(null)
     }
+  }
+
+  function toggleSelected(id: string) {
+    setSelectedIds((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function toggleSelectAllOnPage() {
+    const pageIds = data?.items.map((q) => q.id) ?? []
+    setSelectedIds((current) => {
+      const allSelected = pageIds.length > 0 && pageIds.every((id) => current.has(id))
+      if (allSelected) return new Set()
+      return new Set(pageIds)
+    })
+  }
+
+  async function handleBulkActionsDone() {
+    setSelectedIds(new Set())
+    await queryClient.invalidateQueries({ queryKey: ['admin', 'questions'] })
   }
 
   return (
@@ -293,6 +523,13 @@ export function QuestionsListPage() {
         </div>
       </div>
 
+      {selectedIds.size > 0 && (
+        <BulkActionsBar
+          selectedIds={Array.from(selectedIds)}
+          onDone={() => void handleBulkActionsDone()}
+        />
+      )}
+
       <Card>
         <CardContent className="p-0 sm:p-0">
           {isError ? (
@@ -317,10 +554,20 @@ export function QuestionsListPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-muted-foreground border-b text-left text-xs">
+                    <th className="px-4 py-2.5 font-medium sm:px-5">
+                      <Checkbox
+                        checked={
+                          data.items.length > 0 &&
+                          data.items.every((q) => selectedIds.has(q.id))
+                        }
+                        onChange={toggleSelectAllOnPage}
+                      />
+                    </th>
                     <th className="px-4 py-2.5 font-medium sm:px-5">Question</th>
                     <th className="px-4 py-2.5 font-medium sm:px-5">Difficulty</th>
                     <th className="px-4 py-2.5 font-medium sm:px-5">Source</th>
                     <th className="px-4 py-2.5 font-medium sm:px-5">Status</th>
+                    <th className="px-4 py-2.5 font-medium sm:px-5">Workflow</th>
                     <th className="px-4 py-2.5 font-medium sm:px-5">Actions</th>
                   </tr>
                 </thead>
@@ -330,6 +577,12 @@ export function QuestionsListPage() {
                       key={question.id}
                       className="hover:bg-muted/40 border-b last:border-0"
                     >
+                      <td className="px-4 py-2.5 sm:px-5">
+                        <Checkbox
+                          checked={selectedIds.has(question.id)}
+                          onChange={() => toggleSelected(question.id)}
+                        />
+                      </td>
                       <td className="max-w-xs px-4 py-2.5 sm:px-5">
                         <Link
                           to={ROUTES.questionEdit(question.id)}
@@ -355,6 +608,14 @@ export function QuestionsListPage() {
                           className="capitalize"
                         >
                           {question.status}
+                        </Badge>
+                      </td>
+                      <td className="px-4 py-2.5 sm:px-5">
+                        <Badge
+                          variant={WORKFLOW_BADGE[question.workflow.status]}
+                          className="capitalize"
+                        >
+                          {question.workflow.status.replace('_', ' ')}
                         </Badge>
                       </td>
                       <td className="px-4 py-2.5 sm:px-5">

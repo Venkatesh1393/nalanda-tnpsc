@@ -18,6 +18,11 @@ export interface AiUsageSummary {
   cached: number
   generated: number
   estimatedCostUsd: number
+  /** Sprint 4 Step 74 — average provider call latency across rows that
+   * actually attempted one (`latencyMs` set) — `null` when none did (e.g.
+   * every row in the window was quota-exceeded/not-configured, or a window
+   * with zero generated rows), never a misleading `0`. */
+  avgLatencyMs: number | null
 }
 
 const ZERO_SUMMARY: AiUsageSummary = {
@@ -27,6 +32,7 @@ const ZERO_SUMMARY: AiUsageSummary = {
   cached: 0,
   generated: 0,
   estimatedCostUsd: 0,
+  avgLatencyMs: null,
 }
 
 function usageCountersStage(): Record<string, unknown> {
@@ -37,6 +43,7 @@ function usageCountersStage(): Record<string, unknown> {
     cached: { $sum: { $cond: [{ $eq: ['$source', 'cached'] }, 1, 0] } },
     generated: { $sum: { $cond: [{ $eq: ['$source', 'generated'] }, 1, 0] } },
     estimatedCostUsd: { $sum: { $ifNull: ['$estimatedCostUsd', 0] } },
+    avgLatencyMs: { $avg: '$latencyMs' }, // Mongo's $avg already ignores missing/null fields
   }
 }
 

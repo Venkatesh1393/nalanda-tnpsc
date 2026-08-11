@@ -529,11 +529,13 @@ async function sendMessageUncached(
   const wasFirstMessage = conversation.messageCount === 0
   await aiConversationRepository.recordMessage(input.conversationId)
 
+  const generationStartedAt = Date.now()
   try {
     const { parsed, tokenUsage } = await generateReplyWithFallback(
       systemPrompt,
       providerMessages,
     )
+    const latencyMs = Date.now() - generationStartedAt
     const confidenceFlag: AiConfidenceLevel = !parsed.onTopic
       ? 'escalated'
       : parsed.confidence
@@ -572,6 +574,7 @@ async function sendMessageUncached(
       status: 'success',
       tokenUsage,
       estimatedCostUsd,
+      latencyMs,
       confidenceFlag,
       // Short, safe previews only — never the full message or system
       // prompt. See this file's header comment and AIHistory.model.ts.
@@ -602,6 +605,7 @@ async function sendMessageUncached(
       source: 'generated',
       status: 'failure',
       errorMessage,
+      latencyMs: Date.now() - generationStartedAt,
       inputSummary: truncate(input.content, SUMMARY_PREVIEW_CHARS),
       expiresAt: historyExpiry(),
     })

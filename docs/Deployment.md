@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Document Owner** | Backend/Platform |
-| **Status** | Sprint 4 Step 69 — Production Deployment (extends Step 68) |
-| **Last Updated** | 2026-08-10 |
+| **Status** | Sprint 4 Step 72 — Production Backend Deployment (extends Steps 68–69) |
+| **Last Updated** | 2026-08-11 |
 | **Covers** | `backend/`, `frontend/`, `admin/` — not `mobile/` (unbuilt) |
 
 This document is the operational counterpart to `docs/Architecture.md` — that
@@ -258,6 +258,66 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml exec gateway ngi
 (`middleware/rateLimiter.middleware.ts`) — a flood is rejected by nginx
 before it ever reaches Node.
 
+### 7.5 PM2 — bare-metal / VPS alternative (Sprint 4 Step 72)
+
+For a target host with **no container runtime** (a plain Ubuntu/Debian VPS),
+`backend/ecosystem.config.js` gives PM2 the same supervisory role Docker
+plays in §7.1–7.4: auto-restart on crash, log capture, boot-time startup.
+Use **one supervisor or the other, never both** — running PM2 inside a
+Docker container to wrap `node dist/server.js` double-supervises the same
+process for no benefit; the Dockerfile's own `CMD` stays a plain foreground
+process by design.
+
+```bash
+cd backend
+npm install -g pm2        # or use npx pm2 <cmd> everywhere below
+cp .env.production.example .env   # fill in real production values, §9
+npm run build
+npm run pm2:start:prod    # builds, then `pm2 start ecosystem.config.js --env production`
+pm2 startup                # prints an OS-specific command — run it once so
+                            # PM2 (and this app) survive a host reboot
+pm2 save                   # persist the current process list for `pm2 startup`
+```
+
+`ecosystem.config.js` mirrors this document's environment split (§1) via
+`env` / `env_test` / `env_production` blocks — each sets only `NODE_ENV`;
+every other value still comes from `backend/.env`, same as
+`docker-compose.yml`'s "pin `NODE_ENV`, read everything else from
+`env_file`" pattern (§7.3). Matching npm scripts: `pm2:start` (development),
+`pm2:start:test`, `pm2:start:prod`, plus `pm2:reload` (zero-downtime),
+`pm2:stop`, `pm2:delete`, `pm2:logs`, `pm2:status`.
+
+Two things worth understanding before relying on this in production:
+
+- **Single instance by default, even in `production`.** It would be easy to
+  set `exec_mode: 'cluster'` + `instances: 'max'` to use every CPU core, but
+  `express-rate-limit`'s in-memory store and `CACHE_DRIVER=memory`
+  (`config/cache.ts`) are both per-process — that config change would
+  silently turn into exactly the "more than one backend instance" scaling
+  gate §6 already warns about (a client could round-robin across workers
+  and never trip the rate limiter; two workers could briefly cache
+  different answers). Don't raise `instances` past `1` until
+  `CACHE_DRIVER=redis` is actually implemented.
+- **`wait_ready`/`listen_timeout` are wired to a real readiness signal.**
+  `server.ts` calls `process.send?.('ready')` only after `app.listen()`'s
+  callback fires — i.e. only after `connectDatabase()` has already resolved
+  — so `pm2 reload` (zero-downtime restart) waits for that signal before
+  killing the old process, instead of assuming "forked" means "ready."
+  `kill_timeout` is set to `10.5s`, just above `server.ts`'s own
+  `SHUTDOWN_TIMEOUT_MS` (10s, §4), for the same reason Docker's
+  `stop_grace_period` note in §4 exists — PM2's default `kill_timeout`
+  (1.6s) would `SIGKILL` mid-drain and cut off in-flight requests.
+
+**Known verification gap**: like §13's Docker/nginx note, this repo's
+Windows development sandbox cannot deliver a real POSIX `SIGTERM`/`SIGINT`
+to a Node process (Windows has no native signal delivery, whether run
+directly or through PM2) — `pm2 stop`/`pm2 reload`'s graceful-drain path was
+exercised for startup/`wait_ready`/health checks in this environment, but
+the actual signal-driven half of `shutdown()` (§4) is verified by code
+review here, not a live signal test. It runs correctly on any real Linux
+host (the actual deploy target) — verify once against a disposable Linux VM
+or the production host itself before the first real cutover.
+
 ---
 
 ## 8. CI/CD — GitHub Actions
@@ -423,7 +483,19 @@ numbers, not aspirational ones.
   `docker-compose.prod.yml` have not been exercised against a running
   Docker daemon at all yet (no real domain/certificates exist to test
   against either) — review the config carefully (or test in a disposable
-  environment) before relying on it for a real cutover.
+  environment) before relying on it for a real cutover. (Sprint 4 Step 72
+  did live-verify the backend *app itself* running with `NODE_ENV=production`
+  outside Docker — build, boot, `GET /api/health[/ready]`, JSON logging,
+  `validateProductionConfig()` — and separately under PM2 with
+  `wait_ready`/health checks, §7.5. What's still unverified is specifically
+  the Docker image build and the nginx gateway/TLS layer.)
+- **Graceful-shutdown signal delivery unverified on this Windows dev
+  sandbox** (§4, §7.5) — Windows has no native POSIX signal delivery, so
+  neither a raw `node dist/server.js` nor a PM2-managed instance could be
+  used here to confirm `SIGTERM`/`SIGINT` actually reaches `server.ts`'s
+  `shutdown()` handler; the drain/disconnect/exit logic itself was verified
+  by code review, not a live signal test. Confirm once against a real Linux
+  host (or `docker stop` there) before the first cutover.
 - **GHCR images publish as private by default** under a personal GitHub
   account — if a separate deploy host needs to pull them, either make the
   package public or authenticate that host with a token that has

@@ -2,6 +2,7 @@ import path from 'node:path'
 
 import { parse as parseCsvSync } from 'csv-parse/sync'
 import { stringify as stringifyCsvSync } from 'csv-stringify/sync'
+import { Document, HeadingLevel, Packer, Paragraph, TextRun } from 'docx'
 import ExcelJS from 'exceljs'
 import type { Types } from 'mongoose'
 
@@ -22,16 +23,12 @@ import * as questionRepository from '../../repositories/question.repository'
 import * as subjectRepository from '../../repositories/subject.repository'
 import * as subtopicRepository from '../../repositories/subtopic.repository'
 import * as topicRepository from '../../repositories/topic.repository'
-import * as userRepository from '../../repositories/user.repository'
 import { ApiError } from '../../utils/ApiError'
 import * as auditLogService from '../auditLog.service'
+import { recordVersion, resolveAuditActor } from './adminQuestions.service'
+import { parseWordBuffer } from './wordQuestionParser'
 
 export type ImportActor = { id: string; role: Role }
-
-async function resolveAuditActor(actor: ImportActor) {
-  const actingUser = await userRepository.findById(actor.id)
-  return { id: actor.id, role: actor.role, email: actingUser?.email ?? 'unknown' }
-}
 
 // --- Row/file shapes -----------------------------------------------------
 
@@ -663,8 +660,17 @@ export async function parseImportFile(
   originalName: string,
 ): Promise<ParsedImportFile> {
   const extension = path.extname(originalName).toLowerCase()
+  // `.docx` dispatches to a completely different parser
+  // (`wordQuestionParser.ts`, mammoth text extraction + the documented
+  // line-based convention) but produces the exact same `RawRow[]` shape as
+  // CSV/XLSX — everything below this point (`processRow`'s validation,
+  // reference resolution, dedup) is format-agnostic and untouched.
   const rawRows =
-    extension === '.xlsx' ? await parseXlsxBuffer(buffer) : parseCsvBuffer(buffer)
+    extension === '.docx'
+      ? await parseWordBuffer(buffer)
+      : extension === '.xlsx'
+        ? await parseXlsxBuffer(buffer)
+        : parseCsvBuffer(buffer)
 
   if (rawRows.length === 0) {
     throw ApiError.badRequest('The file has no data rows.')
@@ -722,9 +728,40 @@ export async function confirmImport(
   const toInsert = parsed.rows.filter(
     (row) => requested.has(row.rowNumber) && row.status === 'valid' && row.resolved,
   )
-  const docs = toInsert.map((row) => row.resolved as Partial<IQuestion>)
+  const auditActor = await resolveAuditActor(actor)
+  const now = new Date()
+  // Sprint 4 Step 71.5 — an imported question starts at `pending_review`,
+  // not `draft`: the confirm click the admin just made already *is* the
+  // deliberate submission act (they reviewed this exact row in the preview
+  // step immediately before), so routing every imported row through an idle
+  // `draft` state first would just be a redundant manual re-submission step
+  // per row, for potentially thousands of rows at once.
+  const docs = toInsert.map((row) => ({
+    ...(row.resolved as Partial<IQuestion>),
+    workflow: {
+      status: 'pending_review' as const,
+      submittedBy: actor.id as unknown as Types.ObjectId,
+      submittedAt: now,
+    },
+  }))
 
-  const { insertedCount, failures } = await questionRepository.bulkInsert(docs)
+  const { insertedCount, insertedIds, failures } = await questionRepository.bulkInsert(
+    docs as unknown as Partial<IQuestion>[],
+  )
+
+  if (insertedIds.length > 0) {
+    const insertedQuestions = await questionRepository.findByIdsForAdmin(insertedIds)
+    await Promise.all(
+      insertedQuestions.map((question) =>
+        recordVersion(
+          question,
+          'bulkImport',
+          auditActor,
+          `Imported from ${parsed.fileName}`,
+        ),
+      ),
+    )
+  }
 
   const failureByIndex = new Map(
     failures.map((failure) => [failure.index, failure.message]),
@@ -738,7 +775,6 @@ export async function confirmImport(
       Boolean(failure.message),
     )
 
-  const auditActor = await resolveAuditActor(actor)
   await auditLogService.recordAction(
     auditActor,
     'question.bulkImport',
@@ -790,4 +826,66 @@ export async function generateTemplateXlsx(): Promise<Buffer> {
 
   const buffer = await workbook.xlsx.writeBuffer()
   return Buffer.from(buffer)
+}
+
+/** Sprint 4 Step 71.5 — Word (.docx) Bulk Import template. Demonstrates the
+ * exact line-based convention `wordQuestionParser.ts` parses, filled with
+ * one real, valid example question (not placeholder "lorem ipsum" text —
+ * an admin can literally re-upload this unmodified file and see it parse
+ * successfully) so an admin can see the expected shape before writing
+ * their own. */
+export async function generateTemplateDocx(): Promise<Buffer> {
+  const bold = (text: string) => new TextRun({ text, bold: true })
+  const plain = (text: string) => new TextRun({ text })
+  const line = (label: string, value: string) =>
+    new Paragraph({ children: [bold(`${label}: `), plain(value)] })
+
+  const doc = new Document({
+    sections: [
+      {
+        children: [
+          new Paragraph({
+            text: 'Nalanda TNPSC — Word Question Import Template',
+            heading: HeadingLevel.HEADING_1,
+          }),
+          new Paragraph({
+            text: 'One question per block, separated by a line containing only ---. Field lines are KEY: value. Options are A) text (English) / ATA) text (Tamil), letters A-F mapping to option 1-6. ANSWER: selects the correct option by letter.',
+          }),
+          new Paragraph({ text: '' }),
+          new Paragraph({ heading: HeadingLevel.HEADING_2, text: 'Example question' }),
+          line('EXAM', 'group-1|group-2'),
+          line('SUBJECT', 'history'),
+          line('TOPIC', 'modern-india'),
+          line('SUBTOPIC', 'indian-independence-movement'),
+          line('Q', 'Who was the first Prime Minister of India?'),
+          line('QTA', 'இந்தியாவின் முதல் பிரதமர் யார்?'),
+          new Paragraph({ children: [bold('A) '), plain('Jawaharlal Nehru')] }),
+          new Paragraph({ children: [bold('ATA) '), plain('ஜவகர்லால் நேரு')] }),
+          new Paragraph({ children: [bold('B) '), plain('Mahatma Gandhi')] }),
+          new Paragraph({ children: [bold('C) '), plain('Sardar Patel')] }),
+          new Paragraph({ children: [bold('D) '), plain('Rajendra Prasad')] }),
+          line('ANSWER', 'A'),
+          line('DIFFICULTY', 'medium'),
+          line(
+            'EXPLANATION',
+            'Jawaharlal Nehru served as the first Prime Minister of independent India from 1947.',
+          ),
+          line('SOURCE', 'curated'),
+          line('PYQ', 'false'),
+          line('TAGS', 'modern-history|freedom-struggle'),
+          new Paragraph({ text: '---' }),
+          new Paragraph({ text: '' }),
+          new Paragraph({
+            heading: HeadingLevel.HEADING_2,
+            text: 'All recognized field keys',
+          }),
+          new Paragraph({
+            text: 'EXAM, SUBJECT, TOPIC, SUBTOPIC (required — same slugs/codes as the CSV/XLSX template), Q, QTA, A)/B)/C).../ATA)/BTA)... (2-6 options), ANSWER, DIFFICULTY, EXPLANATION, EXPLANATIONTA, SOURCE, PYQ, PYQYEAR, EXAMSTAGE, TAGS, ACTIVE, PREMIUM, AIEXPLANATION, IMAGE.',
+          }),
+        ],
+      },
+    ],
+  })
+
+  return Packer.toBuffer(doc)
 }

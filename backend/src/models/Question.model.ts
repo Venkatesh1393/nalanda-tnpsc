@@ -11,6 +11,10 @@ import {
   type TnpscExamStage,
 } from '../constants/practice'
 import { bilingualField, type BilingualText } from './shared/bilingualText'
+import {
+  contentWorkflowPlugin,
+  type WorkflowGoverned,
+} from './shared/contentWorkflow.plugin'
 import { softDeletePlugin, type SoftDeletable } from './shared/softDelete.plugin'
 
 export interface IQuestionOption {
@@ -36,7 +40,7 @@ export const questionOptionSchema = new Schema<IQuestionOption>(
  * clearest embed-vs-reference call in `docs/Database.md` §2/§10 (small,
  * bounded 2-6 items, always read with the question, never queried alone).
  */
-export interface IQuestion extends SoftDeletable {
+export interface IQuestion extends SoftDeletable, WorkflowGoverned {
   examIds: Types.ObjectId[] // denormalized — avoids a join chain for filtered practice-quiz generation
   subjectId: Types.ObjectId // denormalized
   topicId: Types.ObjectId // denormalized
@@ -136,6 +140,7 @@ const questionSchema = new Schema<IQuestion>(
 )
 
 questionSchema.plugin(softDeletePlugin)
+questionSchema.plugin(contentWorkflowPlugin)
 questionSchema.index({ subtopicId: 1, difficulty: 1 })
 // A compound { examIds, tags } index is not possible — MongoDB rejects
 // compound indexes across two multikey (array) fields ("cannot index

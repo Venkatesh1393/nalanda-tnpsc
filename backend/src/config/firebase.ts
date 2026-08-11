@@ -3,6 +3,15 @@ import admin from 'firebase-admin'
 import { env } from './env'
 import { logger } from './logger'
 import { ApiError } from '../utils/ApiError'
+import { withTimeout } from '../utils/resilience'
+
+/** Sprint 4 Step 73 — `verifyIdToken` makes a real network call to Google
+ * (fetching/caching Firebase's public signing keys, then validating against
+ * them) with no timeout of its own; bounds how long an auth request can
+ * hang if Google's endpoint is slow/unreachable, instead of leaving the
+ * request open indefinitely. No retry here — a failed verification should
+ * fail the login attempt immediately (fail-closed), not silently delay it. */
+const VERIFY_TOKEN_TIMEOUT_MS = 10_000
 
 let firebaseApp: admin.app.App | undefined
 
@@ -65,7 +74,11 @@ export async function verifyFirebaseIdToken(
   idToken: string,
 ): Promise<admin.auth.DecodedIdToken> {
   try {
-    return await getFirebaseAdmin().auth().verifyIdToken(idToken)
+    return await withTimeout(
+      getFirebaseAdmin().auth().verifyIdToken(idToken),
+      VERIFY_TOKEN_TIMEOUT_MS,
+      'Firebase token verification',
+    )
   } catch (error) {
     logger.warn('Firebase ID token verification failed', {
       code: (error as { code?: string }).code ?? 'unknown',

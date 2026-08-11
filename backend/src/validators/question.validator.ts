@@ -158,7 +158,7 @@ export const listMetaTopicsQuerySchema = z.object({ subjectId: objectIdSchema })
 export const listMetaSubtopicsQuerySchema = z.object({ topicId: objectIdSchema })
 
 export const importTemplateQuerySchema = z.object({
-  format: z.enum(['csv', 'xlsx']).default('csv'),
+  format: z.enum(['csv', 'xlsx', 'docx']).default('csv'),
 })
 
 export const importConfirmBodySchema = z.object({
@@ -186,3 +186,50 @@ export type ImportConfirmBody = z.infer<typeof importConfirmBodySchema>
 /** Re-exported for the import parser's reference-validation step — keeps the
  * "known exam codes" list in one place rather than re-declaring it. */
 export const KNOWN_EXAM_CODES = EXAM_CATEGORY_CODES
+
+// --- Content Workflow (Sprint 4 Step 71.5) --------------------------------
+
+export const requestChangesBodySchema = z.object({
+  reason: z.string().trim().min(1, 'A reason is required.').max(1000),
+})
+export type RequestChangesBody = z.infer<typeof requestChangesBodySchema>
+
+export const versionParamsSchema = z.object({
+  id: objectIdSchema,
+  versionNumber: z.coerce.number().int().min(1),
+})
+export type VersionParams = z.infer<typeof versionParamsSchema>
+
+// --- Bulk Update / Bulk Delete (Sprint 4 Step 71.5) -----------------------
+
+/** Deliberately narrower than `updateQuestionBodySchema` — bulk operations
+ * only ever touch fields with no cross-document reference/invariant to
+ * re-check (see `services/admin/questionBulkActions.service.ts`'s header
+ * comment). Hierarchy references and content text stay single-question- or
+ * file-import-only. */
+const bulkUpdatePatchSchema = z
+  .object({
+    isActive: z.boolean(),
+    isPremium: z.boolean(),
+    difficulty: z.enum(QUESTION_DIFFICULTIES),
+    tags: z.array(z.string().trim().min(1)),
+    aiExplanationEligible: z.boolean(),
+  })
+  .partial()
+  .refine((patch) => Object.keys(patch).length > 0, 'At least one field is required.')
+
+export const bulkUpdateBodySchema = z.object({
+  questionIds: z.array(objectIdSchema).min(1).max(10000),
+  patch: bulkUpdatePatchSchema,
+})
+export type BulkUpdateBody = z.infer<typeof bulkUpdateBodySchema>
+
+export const bulkUpdatePreviewBodySchema = z.object({
+  questionIds: z.array(objectIdSchema).min(1).max(10000),
+})
+export type BulkUpdatePreviewBody = z.infer<typeof bulkUpdatePreviewBodySchema>
+
+export const bulkDeleteBodySchema = z.object({
+  questionIds: z.array(objectIdSchema).min(1).max(10000),
+})
+export type BulkDeleteBody = z.infer<typeof bulkDeleteBodySchema>

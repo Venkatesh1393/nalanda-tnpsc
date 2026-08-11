@@ -22,6 +22,9 @@ export interface AiUsageSummaryDTO {
   cached: number
   generated: number
   estimatedCostUsd: number
+  /** Sprint 4 Step 74 — average provider call latency (ms) across rows that
+   * attempted one; `null` when none did in this window. */
+  avgLatencyMs: number | null
 }
 
 export interface AiUsageByUserDTO extends AiUsageSummaryDTO {

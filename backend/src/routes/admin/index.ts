@@ -11,6 +11,7 @@ import dashboardRoutes from './dashboard.routes'
 import invitesRoutes from './invites.routes'
 import learningContentRoutes from './learningContent.routes'
 import liveExamsRoutes from './liveExams.routes'
+import monitoringRoutes from './monitoring.routes'
 import notificationsRoutes from './notifications.routes'
 import paymentsRoutes from './payments.routes'
 import questionsRoutes from './questions.routes'
@@ -62,5 +63,7 @@ router.use('/ai-usage', aiUsageRoutes)
 router.use('/ai-question-drafts', aiQuestionGeneratorRoutes)
 // Sprint 4 Step 62 — Notification Engine (Admin Announcements)
 router.use('/notifications', notificationsRoutes)
+// Sprint 4 Step 74 — Production Monitoring
+router.use('/monitoring', monitoringRoutes)
 
 export default router

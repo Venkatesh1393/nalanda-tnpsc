@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Document Owner** | Backend/Platform |
-| **Status** | Sprint 4 Step 70 — Final Production Audit |
-| **Last Updated** | 2026-08-10 |
+| **Status** | Sprint 4 Step 74 — Production Monitoring (extends Steps 70/73) |
+| **Last Updated** | 2026-08-11 |
 | **Purpose** | A single, in-order sequence to actually go live. Explains *what to do*; `docs/Deployment.md` explains *why/how each piece works* — read that alongside this for any step that needs more depth. |
 
 Do not skip §1 — deploying with any of its items unresolved means shipping
@@ -25,6 +25,16 @@ Launch-Blocking items must all be closed before Phase 4 (Go Live):
 
 Everything from here on assumes those are either done or explicitly
 accepted as a known-shipped gap by whoever is signing off on launch.
+
+**Also required, added Sprint 4 Step 71.5**: run
+`npm run migrate:question-workflow` in `backend/` once, before or
+immediately after this deploy. It backfills `workflow.status: 'published'`
+onto every question that predates the Enterprise Content Management
+Pipeline — skipping it makes the entire existing question bank invisible
+to Smart Practice/Live Exam question selection, since that query now
+requires `workflow.status: 'published'` (`docs/SPRINT_4_STEP_71_5_COMPLETION_REPORT.md`).
+Safe to re-run; a second run against an already-migrated database is a
+no-op.
 
 ---
 
@@ -73,6 +83,9 @@ directly from this phase's output.
 2. Fill `frontend`/`admin` `VITE_*` values — either as local
    `--build-arg`s (`docs/Deployment.md` §7.2) or as GitHub Actions
    repository secrets for the CD pipeline (§8.2 below).
+   `frontend/.env.production.example` (Sprint 4 Step 71) lists exactly
+   which ones and what production-flavored values look like — copy its
+   shape, never its blank values, into the actual build-args/secrets.
 3. Replace every `nalanda-tnpsc.com` placeholder in `nginx/gateway.conf`
    and `nginx/snippets/ssl-params.conf` with the real domain.
 4. Run through `docs/Deployment.md` §14's Pre-Deploy Checklist in full.
@@ -99,11 +112,26 @@ npm run verify:adaptive-practice
 npm run verify:ai-optimization
 npm run verify:ai-tutor
 npm run verify:ai-question-generator
+
+# Sprint 4 Step 73 — one-shot credential/connectivity check across all five
+# external services (docs/CloudServicesConfiguration.md §2). Run this again
+# after filling in backend/.env with real PRODUCTION credentials, not just
+# once here against development.
+npm run verify:cloud-services
+
+# Sprint 4 Step 74 — Production Monitoring. Confirms the SystemEvent
+# collection/indexes/aggregations work end-to-end (docs/MonitoringStrategy.md
+# §3-5), and reports every collection's actual indexes as a final sanity
+# check before going live (docs/MonitoringStrategy.md §5).
+npm run verify:monitoring
+npm run audit:indexes
 ```
 
-All twelve commands above must be clean before proceeding. If any
-`verify:*` script fails against the *production* database for the first
-time (as opposed to development, where it was last confirmed clean in
+All fifteen commands above must be clean before proceeding (`verify:cloud-services`
+reporting `SKIPPED` for Razorpay/Anthropic is expected if those keys are
+still blank — only a `FAILED` line blocks the deploy). If any `verify:*`
+script fails against the *production* database for the first time (as
+opposed to development, where it was last confirmed clean in
 `docs/FINAL_AUDIT.md`), stop and investigate before going further — do not
 assume it's environment noise.
 
@@ -157,10 +185,17 @@ build behaves the same way live traffic will experience it.
       (`docs/MonitoringStrategy.md` §1)
 - [ ] Log aggregator ingesting `logs/*.log` or container stdout
       (`docs/MonitoringStrategy.md` §2)
-- [ ] `docs/BackupStrategy.md` §2's MongoDB dump scheduled and one restore
-      drill actually performed, not just scripted
+- [ ] `npm run backup:database` (`docs/BackupStrategy.md` §2.1, built and
+      restore-drill-verified against development in Sprint 4 Step 73) is
+      scheduled via cron/Task Scheduler on the production host — the script
+      itself doesn't run on a timer by itself yet
 - [ ] Atlas/Razorpay/Cloudinary dashboards' own built-in alerting turned on
-      (`docs/MonitoringStrategy.md` §4.2)
+      (`docs/MonitoringStrategy.md` §8.2)
+- [ ] Real alerting/paging wired up against `docs/AlertingStrategy.md`'s
+      thresholds (Sprint 4 Step 74) — every signal (`/admin/monitoring/*`,
+      `/admin/ai-usage`, `/admin/payments/stats`) is queryable today but
+      nothing pushes a notification yet; §3 of that doc specifies exactly
+      what implementing it takes
 
 ---
 

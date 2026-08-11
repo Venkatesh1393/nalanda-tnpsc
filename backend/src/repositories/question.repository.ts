@@ -2,6 +2,7 @@ import type { Types } from 'mongoose'
 
 import type { QuestionDifficulty } from '../constants/practice'
 import type { IQuestion } from '../models/Question.model'
+import type { IContentWorkflow } from '../models/shared/contentWorkflow.plugin'
 import { notDeletedFilter } from '../models/shared/softDelete.plugin'
 import { Question, type QuestionDocument } from '../models/Question.model'
 
@@ -24,6 +25,13 @@ export async function findRandomQuestionIds(
     topicId: filter.topicId,
     isActive: true,
     deletedAt: null,
+    // Sprint 4 Step 71.5 — the actual enforcement point of the content
+    // workflow: a question only ever reaches a real practice/live-exam
+    // session once it's cleared Draft -> Pending Review -> Approved and
+    // been explicitly published. Everywhere else `workflow.status` is
+    // read-only display/audit context; this is the one query that makes
+    // the gate real.
+    'workflow.status': 'published',
     ...(filter.difficulty && { difficulty: filter.difficulty }),
   }
   const docs = await Question.aggregate<{ _id: Types.ObjectId }>([
@@ -202,6 +210,82 @@ export async function findQuestionTextsBySubtopic(
     { 'questionText.en': 1 },
   )
   return docs.map((doc) => ({ id: doc.id, textEn: doc.questionText.en ?? '' }))
+}
+
+// --- Content Workflow (Sprint 4 Step 71.5) ------------------------------
+
+/** Applies a workflow-only patch (status + the relevant actor/timestamp
+ * fields) via `findOneAndUpdate` rather than `updateById`'s `.save()` path —
+ * a workflow transition never touches content fields, so there's no need to
+ * re-run the full document's content validators (options/pyqYear/etc.) for
+ * a pure status change. A property explicitly set to `null` (e.g. clearing
+ * a stale `reviewNote` on resubmission) is `$unset` rather than `$set` —
+ * MongoDB's BSON encoder silently drops `undefined`-valued keys from a
+ * `$set`, which would leave the old value in place instead of clearing it. */
+export function updateWorkflow(
+  id: Types.ObjectId | string,
+  patch: Partial<Record<keyof IContentWorkflow, unknown>>,
+): Promise<QuestionDocument | null> {
+  const $set: Record<string, unknown> = {}
+  const $unset: Record<string, ''> = {}
+  for (const [key, value] of Object.entries(patch)) {
+    if (value === null) $unset[`workflow.${key}`] = ''
+    else if (value !== undefined) $set[`workflow.${key}`] = value
+  }
+  const update: Record<string, unknown> = {}
+  if (Object.keys($set).length > 0) update.$set = $set
+  if (Object.keys($unset).length > 0) update.$unset = $unset
+  return Question.findOneAndUpdate({ _id: id, ...notDeletedFilter }, update, {
+    new: true,
+  })
+}
+
+// --- Bulk Update / Bulk Delete (Sprint 4 Step 71.5) ----------------------
+
+export interface BulkUpdatePatch {
+  isActive?: boolean
+  isPremium?: boolean
+  difficulty?: QuestionDifficulty
+  tags?: string[]
+  aiExplanationEligible?: boolean
+}
+
+/** `updateMany` (not a per-document `.save()` loop) — every field this
+ * accepts (`validators/question.validator.ts`'s `bulkUpdateBodySchema`
+ * allowlist) is a plain scalar/array with no cross-field invariant to
+ * re-check, so the fast bulk path is safe here in a way it wouldn't be for
+ * content-text/hierarchy fields (those still only go through the
+ * one-at-a-time `updateById`/import paths, which do re-validate). This is
+ * the "100,000+ questions" scale requirement's actual mechanism. */
+export async function bulkUpdateFields(
+  ids: (Types.ObjectId | string)[],
+  patch: BulkUpdatePatch,
+): Promise<{ matchedCount: number; modifiedCount: number }> {
+  const result = await Question.updateMany(
+    { _id: { $in: ids }, ...notDeletedFilter },
+    { $set: patch },
+  )
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount }
+}
+
+export function findByIdsForAdmin(
+  ids: (Types.ObjectId | string)[],
+): Promise<QuestionDocument[]> {
+  return Question.find({ _id: { $in: ids }, ...notDeletedFilter })
+}
+
+/** Soft-delete (archive) every matching, not-yet-archived question in one
+ * operation — "Bulk Delete" reuses the exact same `deletedAt` mechanism the
+ * single-question archive endpoint already uses (Step 53); there is no
+ * hard-delete anywhere in this codebase for `Question`. */
+export async function bulkArchive(
+  ids: (Types.ObjectId | string)[],
+): Promise<{ matchedCount: number; modifiedCount: number }> {
+  const result = await Question.updateMany(
+    { _id: { $in: ids }, ...notDeletedFilter },
+    { $set: { deletedAt: new Date() } },
+  )
+  return { matchedCount: result.matchedCount, modifiedCount: result.modifiedCount }
 }
 
 /**

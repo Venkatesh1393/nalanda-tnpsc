@@ -32,6 +32,21 @@ export const endpoints = {
     questionImportTemplate: '/admin/questions/import/template',
     questionImportPreview: '/admin/questions/import/preview',
     questionImportConfirm: '/admin/questions/import/confirm',
+    questionImportPdfMetadata: '/admin/questions/import/pdf-metadata',
+
+    // Sprint 4 Step 71.5 — Enterprise Content Management Pipeline
+    submitQuestionForReview: (id: string) => `/admin/questions/${id}/submit-for-review`,
+    approveQuestion: (id: string) => `/admin/questions/${id}/approve`,
+    requestQuestionChanges: (id: string) => `/admin/questions/${id}/request-changes`,
+    publishQuestion: (id: string) => `/admin/questions/${id}/publish`,
+    questionVersions: (id: string) => `/admin/questions/${id}/versions`,
+    questionVersionDetail: (id: string, versionNumber: number) =>
+      `/admin/questions/${id}/versions/${versionNumber}`,
+    rollbackQuestionVersion: (id: string, versionNumber: number) =>
+      `/admin/questions/${id}/versions/${versionNumber}/rollback`,
+    bulkUpdateQuestionsPreview: '/admin/questions/bulk-update/preview',
+    bulkUpdateQuestions: '/admin/questions/bulk-update',
+    bulkDeleteQuestions: '/admin/questions/bulk-delete',
 
     // Sprint 4 Step 54 — Content Management System
     exams: '/admin/exams',

@@ -16,6 +16,8 @@ import {
 import { getPlan } from './entitlement.service'
 import { ApiError } from '../utils/ApiError'
 import { logger } from '../config/logger'
+import { withTimeout } from '../utils/resilience'
+import { recordSystemEvent } from '../utils/systemEvents'
 
 /**
  * Sprint 4 Step 56 — Razorpay Payment + Subscription Integration, TEST MODE
@@ -40,6 +42,17 @@ import { logger } from '../config/logger'
 
 const PERIOD_DAYS: Record<BillingCycle, number> = { monthly: 30, annual: 365 }
 const RECENT_PENDING_WINDOW_MS = 10 * 60 * 1000
+/** Sprint 4 Step 73 — bounds how long a checkout request can hang on
+ * Razorpay before failing fast (graceful degradation). Deliberately NOT
+ * paired with an automatic retry, unlike `services/media/cloudinaryUpload.
+ * service.ts`'s uploads: a timeout here is ambiguous — the order may have
+ * already been created on Razorpay's side with the response merely lost in
+ * transit — and blindly retrying could create a second real Razorpay order
+ * for the same purchase with no local record to detect the duplicate
+ * against (`findRecentPending` below only catches a resubmit AFTER an order
+ * row already exists). The user can always just click "upgrade" again;
+ * that's a safer failure mode than an automated retry guessing wrong. */
+const ORDER_CREATE_TIMEOUT_MS = 15_000
 
 function requireRazorpayConfigured() {
   if (!isRazorpayConfigured()) {
@@ -99,12 +112,16 @@ export async function createOrder(
   const razorpay = getRazorpayClient()
   let order
   try {
-    order = await razorpay.orders.create({
-      amount: amountPaise,
-      currency: 'INR',
-      receipt: `nalanda_${userId}_${Date.now()}`,
-      notes: { userId, tier, billingCycle },
-    })
+    order = await withTimeout(
+      razorpay.orders.create({
+        amount: amountPaise,
+        currency: 'INR',
+        receipt: `nalanda_${userId}_${Date.now()}`,
+        notes: { userId, tier, billingCycle },
+      }),
+      ORDER_CREATE_TIMEOUT_MS,
+      'Razorpay order creation',
+    )
   } catch (error) {
     logger.error('Razorpay order creation failed', {
       userId,
@@ -204,6 +221,19 @@ export async function processWebhookPayload(
     // Never log the signature or the secret — event type only, if the body
     // even parses.
     logger.warn('Razorpay webhook signature verification failed')
+    // Sprint 4 Step 74 — a bad signature is either a misconfigured
+    // RAZORPAY_WEBHOOK_SECRET or a spoofing attempt against the webhook
+    // endpoint; either way it's a `badRequest` (operational) `ApiError`, so
+    // `errorHandler.middleware.ts`'s own SystemEvent tracking never sees it
+    // (that only covers unexpected/non-operational errors) — tracked here
+    // explicitly instead, at `critical` since repeated occurrences are a
+    // real signal something's wrong, not routine client-input noise.
+    recordSystemEvent({
+      type: 'webhook_failure',
+      severity: 'critical',
+      message: 'Razorpay webhook signature verification failed',
+      source: 'razorpay.webhook',
+    })
     throw ApiError.badRequest('Invalid webhook signature.')
   }
 
@@ -211,6 +241,12 @@ export async function processWebhookPayload(
   try {
     body = JSON.parse(rawBody)
   } catch {
+    recordSystemEvent({
+      type: 'webhook_failure',
+      severity: 'error',
+      message: 'Razorpay webhook body failed to parse as JSON',
+      source: 'razorpay.webhook',
+    })
     throw ApiError.badRequest('Malformed webhook body.')
   }
 

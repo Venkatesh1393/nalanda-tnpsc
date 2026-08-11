@@ -6,6 +6,9 @@ import {
   IMPORT_ALLOWED_EXTENSIONS,
   IMPORT_ALLOWED_MIME_TYPES,
   IMPORT_MAX_FILE_SIZE_BYTES,
+  PDF_METADATA_ALLOWED_EXTENSIONS,
+  PDF_METADATA_ALLOWED_MIME_TYPES,
+  PDF_METADATA_MAX_FILE_SIZE_BYTES,
 } from '../constants/questionImport'
 import { ApiError } from '../utils/ApiError'
 
@@ -77,12 +80,22 @@ export const uploadStudyMaterialFile = createUploadMiddleware({
   allowedExtensions: new Set([...IMAGE_EXTENSIONS, '.pdf']),
 })
 
-/** Bulk Question Import (Sprint 4 Step 53) — CSV/XLSX only, capped well
- * below a size that could realistically hold more than
- * `IMPORT_MAX_ROWS` rows; `questionImport.service.ts` enforces the row-count
- * ceiling itself once the file is actually parsed. */
+/** Bulk Question Import (Sprint 4 Step 53; `.docx` added Step 71.5) —
+ * CSV/XLSX/Word, capped well below a size that could realistically hold
+ * more than `IMPORT_MAX_ROWS` rows; `questionImport.service.ts` enforces
+ * the row-count ceiling itself once the file is actually parsed, and
+ * dispatches to a format-specific parser by extension. */
 export const uploadBulkImportFile = createUploadMiddleware({
   maxFileSizeBytes: IMPORT_MAX_FILE_SIZE_BYTES,
   allowedMimeTypes: IMPORT_ALLOWED_MIME_TYPES,
   allowedExtensions: IMPORT_ALLOWED_EXTENSIONS,
+})
+
+/** PDF metadata extraction (Sprint 4 Step 71.5) — small ceiling, the file is
+ * never stored, only its `Info` dictionary is read
+ * (`services/admin/pdfMetadata.service.ts`). */
+export const uploadPdfMetadataFile = createUploadMiddleware({
+  maxFileSizeBytes: PDF_METADATA_MAX_FILE_SIZE_BYTES,
+  allowedMimeTypes: PDF_METADATA_ALLOWED_MIME_TYPES,
+  allowedExtensions: PDF_METADATA_ALLOWED_EXTENSIONS,
 })

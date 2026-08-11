@@ -14,6 +14,17 @@ async function start(): Promise<void> {
   const app = createApp()
   server = app.listen(env.PORT, () => {
     logger.info(`Nalanda TNPSC API listening on port ${env.PORT} [${env.NODE_ENV}]`)
+
+    // Sprint 4 Step 72 — Production Backend Deployment. Only defined when
+    // this process has an IPC channel to a parent (PM2's `wait_ready`/
+    // `listen_timeout` in ecosystem.config.js, or Node's own `fork()`) —
+    // plain `node dist/server.js` and Docker's `CMD` never set this, so the
+    // guard makes the signal a no-op everywhere else instead of throwing.
+    // Without it, PM2 would consider the process "online" the instant it
+    // forks, before the HTTP server (or the `connectDatabase()` await above)
+    // has actually finished — exactly the gap that makes a zero-downtime
+    // `pm2 reload` briefly serve connection-refused/DB-not-ready responses.
+    process.send?.('ready')
   })
 }
 

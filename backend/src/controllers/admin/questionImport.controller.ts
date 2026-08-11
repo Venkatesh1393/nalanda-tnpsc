@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 
+import * as pdfMetadataService from '../../services/admin/pdfMetadata.service'
 import * as questionImportService from '../../services/admin/questionImport.service'
 import { ApiError } from '../../utils/ApiError'
 import { sendSuccess } from '../../utils/ApiResponse'
@@ -16,7 +17,21 @@ function requireFile(req: Request): Express.Multer.File {
 }
 
 export async function downloadTemplate(req: Request, res: Response): Promise<void> {
-  const format = (req.query.format as string) === 'xlsx' ? 'xlsx' : 'csv'
+  const format = req.query.format as string
+
+  if (format === 'docx') {
+    const buffer = await questionImportService.generateTemplateDocx()
+    res.setHeader(
+      'Content-Type',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    )
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename="question-import-template.docx"',
+    )
+    res.send(buffer)
+    return
+  }
 
   if (format === 'xlsx') {
     const buffer = await questionImportService.generateTemplateXlsx()
@@ -39,6 +54,18 @@ export async function downloadTemplate(req: Request, res: Response): Promise<voi
     'attachment; filename="question-import-template.csv"',
   )
   res.send(csv)
+}
+
+/**
+ * Sprint 4 Step 71.5 — PDF metadata extraction only, never question-text
+ * parsing (confirmed scope, `services/admin/pdfMetadata.service.ts`'s
+ * header comment). Read-only — nothing is written to MongoDB, so unlike
+ * every other handler in this file, no audit log entry.
+ */
+export async function extractPdfMetadata(req: Request, res: Response): Promise<void> {
+  const file = requireFile(req)
+  const metadata = await pdfMetadataService.extractMetadata(file.buffer)
+  sendSuccess(res, metadata)
 }
 
 /**

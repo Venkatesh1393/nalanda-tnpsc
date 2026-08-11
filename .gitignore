@@ -16,6 +16,14 @@ logs/
 .env.local
 .env.*.local
 
+# Sprint 4 Step 72 — Production Backend Deployment. SSH/TLS private keys
+# (e.g. a cloud host's PEM keypair for deploy access) must never enter git
+# history — a leaked private key can't be rotated by deleting the commit,
+# only by revoking the key entirely. Covers nalanda-key.pem-style files
+# found sitting untracked at the repo root before this rule existed.
+*.pem
+*.key
+
 # A real per-developer docker-compose override (e.g. custom ports/volumes)
 # should never be committed — docker-compose.yml itself (the template) is.
 docker-compose.override.yml

@@ -1,8 +1,12 @@
 import type { BillingCycle } from '../constants/commerce'
 import type { SubscriptionTier } from '../constants/roles'
+import { QUESTION_PAPER_UNLOCK_PRICE_PAISE } from '../constants/questionPapers'
 import { Subscription } from '../models/Subscription.model'
 import type { PaymentDocument } from '../models/Payment.model'
+import type { QuestionPaperPurchaseDocument } from '../models/QuestionPaperPurchase.model'
 import * as paymentRepository from '../repositories/payment.repository'
+import * as profileRepository from '../repositories/profile.repository'
+import * as questionPaperPurchaseRepository from '../repositories/questionPaperPurchase.repository'
 import * as subscriptionRepository from '../repositories/subscription.repository'
 import * as userRepository from '../repositories/user.repository'
 import { env } from '../config/env'
@@ -156,6 +160,104 @@ function requireKeyId(): string {
   return env.RAZORPAY_KEY_ID as string
 }
 
+// ---- Previous Year Question Papers unlock (flat one-time purchase) ----
+// Deliberately a parallel order-creation function, not a branch inside
+// `createOrder` above — that function is tier/billingCycle-shaped end to
+// end (`CHECKOUT_ELIGIBLE_TIERS`, `getPlan`, `paymentRepository`); this is a
+// flat-price, tier-less product writing to a different collection
+// (`QuestionPaperPurchase.model.ts`'s header comment has the full reasoning
+// for why it isn't just a variant of `Payment`).
+
+export async function createPaperUnlockOrder(userId: string): Promise<CreateOrderResultDTO> {
+  requireRazorpayConfigured()
+
+  const existing = await questionPaperPurchaseRepository.findRecentPending(
+    userId,
+    RECENT_PENDING_WINDOW_MS,
+  )
+  if (existing) {
+    return {
+      razorpayOrderId: existing.razorpayOrderId,
+      amount: existing.amount,
+      currency: existing.currency,
+      razorpayKeyId: requireKeyId(),
+    }
+  }
+
+  const razorpay = getRazorpayClient()
+  let order
+  try {
+    order = await withTimeout(
+      razorpay.orders.create({
+        amount: QUESTION_PAPER_UNLOCK_PRICE_PAISE,
+        currency: 'INR',
+        // Razorpay caps `receipt` at 56 characters — `nalanda_paperunlock_`
+        // pushed a 24-char userId + 13-digit timestamp past it (58 chars),
+        // rejected with a real 400 from Razorpay's API (caught here as a
+        // Razorpay SDK error object, not an `Error` instance, so
+        // `String(error)` in the catch block below logs `[object Object]`
+        // — a pre-existing gap shared with `createOrder`'s identical catch,
+        // not something this fix needs to touch).
+        receipt: `nalanda_pyq_${userId}_${Date.now()}`,
+        notes: { userId, purchaseType: 'question_papers_unlock' },
+      }),
+      ORDER_CREATE_TIMEOUT_MS,
+      'Razorpay order creation',
+    )
+  } catch (error) {
+    logger.error('Razorpay paper-unlock order creation failed', {
+      userId,
+      error: error instanceof Error ? error.message : String(error),
+    })
+    throw ApiError.internal('Could not start checkout with the payment provider.')
+  }
+
+  await questionPaperPurchaseRepository.create({
+    userId,
+    razorpayOrderId: order.id,
+    amount: QUESTION_PAPER_UNLOCK_PRICE_PAISE,
+    currency: order.currency,
+    status: 'created',
+  })
+
+  return {
+    razorpayOrderId: order.id,
+    amount: QUESTION_PAPER_UNLOCK_PRICE_PAISE,
+    currency: order.currency,
+    razorpayKeyId: requireKeyId(),
+  }
+}
+
+export async function verifyPaperUnlockPayment(
+  userId: string,
+  input: VerifyPaymentInput,
+): Promise<{ status: 'processing' }> {
+  requireRazorpayConfigured()
+
+  const purchase = await questionPaperPurchaseRepository.findByOrderIdForUser(
+    input.razorpayOrderId,
+    userId,
+  )
+  if (!purchase) throw ApiError.notFound('No matching order for this account.')
+
+  const valid = verifyPaymentSignature(
+    input.razorpayOrderId,
+    input.razorpayPaymentId,
+    input.razorpaySignature,
+  )
+  if (!valid) {
+    logger.warn('Razorpay paper-unlock signature verification failed', {
+      userId,
+      razorpayOrderId: input.razorpayOrderId,
+    })
+    throw ApiError.badRequest('Invalid payment signature.')
+  }
+
+  // Deliberately no DB mutation here — same dual-confirmation rule as
+  // `verifyPayment` above; only the webhook activates anything.
+  return { status: 'processing' }
+}
+
 // ---- Client-side verification (signature check only, never activates) ----
 
 export interface VerifyPaymentInput {
@@ -281,23 +383,41 @@ async function handlePaymentCaptured(entity: RazorpayPaymentEntity): Promise<voi
     razorpayPaymentId: entity.id,
     webhookEventId,
   })
-  if (!payment) {
-    // Either already captured (duplicate/retried delivery — idempotent
-    // no-op, "prevent duplicate activation") or an order.id we never
-    // created a Payment for (ignore rather than error, Razorpay retries
-    // on non-2xx).
-    logger.info('payment.captured: no pending payment matched (duplicate or unknown order)', {
+  if (payment) {
+    await activateSubscriptionForPayment(payment)
+    logger.info('Subscription activated from Razorpay payment', {
+      userId: payment.userId.toString(),
+      tier: payment.tier,
+      billingCycle: payment.billingCycle,
       orderId: entity.order_id,
       paymentId: entity.id,
     })
     return
   }
 
-  await activateSubscriptionForPayment(payment)
-  logger.info('Subscription activated from Razorpay payment', {
-    userId: payment.userId.toString(),
-    tier: payment.tier,
-    billingCycle: payment.billingCycle,
+  // Not a subscription order (or a duplicate delivery for one already
+  // captured) — try the Previous Year Question Papers unlock ledger before
+  // giving up. Looked up by our own `razorpayOrderId`, never by trusting
+  // the webhook payload's `notes` for routing.
+  const purchase = await questionPaperPurchaseRepository.markCapturedIfPending(
+    entity.order_id,
+    { razorpayPaymentId: entity.id, webhookEventId },
+  )
+  if (purchase) {
+    await activatePaperUnlockForPayment(purchase)
+    logger.info('Question papers unlocked from Razorpay payment', {
+      userId: purchase.userId.toString(),
+      orderId: entity.order_id,
+      paymentId: entity.id,
+    })
+    return
+  }
+
+  // Either already captured by an earlier delivery of this same event
+  // (duplicate/retried — idempotent no-op, "prevent duplicate activation")
+  // or an order.id neither ledger ever created a row for (ignore rather
+  // than error, Razorpay retries on non-2xx).
+  logger.info('payment.captured: no pending payment matched (duplicate or unknown order)', {
     orderId: entity.order_id,
     paymentId: entity.id,
   })
@@ -309,15 +429,29 @@ async function handlePaymentFailed(entity: RazorpayPaymentEntity): Promise<void>
     webhookEventId,
     failureReason: entity.error_description ?? 'Payment failed',
   })
-  if (!payment) {
-    logger.info('payment.failed: no pending payment matched (duplicate or unknown order)', {
+  if (payment) {
+    logger.info('Payment failed', {
+      userId: payment.userId.toString(),
       orderId: entity.order_id,
       paymentId: entity.id,
     })
     return
   }
-  logger.info('Payment failed', {
-    userId: payment.userId.toString(),
+
+  const purchase = await questionPaperPurchaseRepository.markFailedIfPending(entity.order_id, {
+    webhookEventId,
+    failureReason: entity.error_description ?? 'Payment failed',
+  })
+  if (purchase) {
+    logger.info('Question papers unlock purchase failed', {
+      userId: purchase.userId.toString(),
+      orderId: entity.order_id,
+      paymentId: entity.id,
+    })
+    return
+  }
+
+  logger.info('payment.failed: no pending payment matched (duplicate or unknown order)', {
     orderId: entity.order_id,
     paymentId: entity.id,
   })
@@ -363,6 +497,16 @@ async function activateSubscriptionForPayment(payment: PaymentDocument): Promise
     userRepository.updateSubscriptionTier(userId, payment.tier),
     paymentRepository.linkSubscription(payment.id, subscription.id),
   ])
+}
+
+/** Permanent — unlike a subscription tier, there is no expiry/downgrade
+ * path for this flag; a refund of this purchase is not a scenario this step
+ * handles (matches `handleRefundProcessed`'s existing "no automatic
+ * downgrade" precedent for subscriptions). */
+async function activatePaperUnlockForPayment(
+  purchase: QuestionPaperPurchaseDocument,
+): Promise<void> {
+  await profileRepository.setPreviousYearPapersUnlocked(purchase.userId, true)
 }
 
 // ---- Cancellation ----

@@ -110,6 +110,13 @@ export interface IProfile {
   /** UI theme preference (Step 44 §C) — distinct from `User.languagePreference`,
    * which is identity/claims data read on every authenticated request. */
   theme: 'light' | 'dark' | 'system'
+  /** Set once by the ₹29 one-time Previous Year Question Papers unlock
+   * purchase (`payment.service.ts#activatePaperUnlockForPayment`) — never
+   * reverts. Lives here rather than on `User` for the same reason `streak`/
+   * `xp` do: it's not read on every authenticated request the way
+   * `User.subscriptionTier` is, only when a paper is downloaded
+   * (`services/questionPaper.service.ts`). */
+  previousYearPapersUnlocked: boolean
 }
 
 export type ProfileDocument = HydratedDocument<IProfile>
@@ -146,6 +153,7 @@ const profileSchema = new Schema<IProfile>(
     district: { type: String, trim: true },
     onboarding: { type: onboardingStateSchema, default: () => ({}) },
     theme: { type: String, enum: ['light', 'dark', 'system'], default: 'system' },
+    previousYearPapersUnlocked: { type: Boolean, default: false },
   },
   { timestamps: true },
 )

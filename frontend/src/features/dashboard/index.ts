@@ -10,6 +10,7 @@ export { CurrentAffairsCard } from '@/features/dashboard/components/current-affa
 export { DailyStudyGoalCard } from '@/features/dashboard/components/daily-study-goal-card'
 export { NotificationsCard } from '@/features/dashboard/components/notifications-card'
 export { PremiumBanner } from '@/features/dashboard/components/premium-banner'
+export { PreviousYearPapersCard } from '@/features/dashboard/components/previous-year-papers-card'
 export { QuickPracticeCard } from '@/features/dashboard/components/quick-practice-card'
 export { RecentActivityCard } from '@/features/dashboard/components/recent-activity-card'
 export { RecommendedTopicsCard } from '@/features/dashboard/components/recommended-topics-card'

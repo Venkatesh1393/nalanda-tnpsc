@@ -143,6 +143,21 @@ export function updateStreak(
   )
 }
 
+/** Set once by the ₹29 one-time Previous Year Question Papers unlock
+ * purchase (`payment.service.ts#activatePaperUnlockForPayment`) — mirrors
+ * `userRepository.updateSubscriptionTier`'s shape for the equivalent
+ * subscription-side flag. */
+export function setPreviousYearPapersUnlocked(
+  userId: Types.ObjectId | string,
+  value: boolean,
+): Promise<ProfileDocument | null> {
+  return Profile.findOneAndUpdate(
+    { userId },
+    { $set: { previousYearPapersUnlocked: value } },
+    { new: true },
+  )
+}
+
 export function completeOnboarding(
   userId: Types.ObjectId | string,
   onboarding: Omit<IOnboardingState, 'completed' | 'completedAt'>,

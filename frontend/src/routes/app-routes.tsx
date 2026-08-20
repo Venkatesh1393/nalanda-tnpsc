@@ -59,6 +59,11 @@ const SearchPage = lazy(() =>
 const AiTutorPage = lazy(() =>
   import('@/pages/ai-tutor/ai-tutor-page').then((m) => ({ default: m.AiTutorPage })),
 )
+const QuestionPapersPage = lazy(() =>
+  import('@/pages/question-papers/question-papers-page').then((m) => ({
+    default: m.QuestionPapersPage,
+  })),
+)
 const SubscriptionPage = lazy(() =>
   import('@/pages/payments/subscription-page').then((m) => ({
     default: m.SubscriptionPage,
@@ -198,6 +203,7 @@ export function AppRoutes() {
           <Route path={ROUTES.notifications} element={<NotificationsPage />} />
           <Route path={ROUTES.search} element={<SearchPage />} />
           <Route path={ROUTES.aiTutor} element={<AiTutorPage />} />
+          <Route path={ROUTES.questionPapers} element={<QuestionPapersPage />} />
           <Route path={ROUTES.subscription} element={<SubscriptionPage />} />
           <Route path={ROUTES.settings(':section')} element={<SettingsPage />} />
 

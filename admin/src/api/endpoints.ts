@@ -115,5 +115,13 @@ export const endpoints = {
     // Sprint 4 Step 56 — Razorpay Payment + Subscription Integration (read-only)
     payments: '/admin/payments',
     paymentDetail: (paymentId: string) => `/admin/payments/${paymentId}`,
+
+    // Previous Year Question Papers
+    questionPapers: '/admin/question-papers',
+    questionPaperDetail: (id: string) => `/admin/question-papers/${id}`,
+    updateQuestionPaperStatus: (id: string) => `/admin/question-papers/${id}/status`,
+    questionPaperFile: (id: string) => `/admin/question-papers/${id}/file`,
+    archiveQuestionPaper: (id: string) => `/admin/question-papers/${id}/archive`,
+    restoreQuestionPaper: (id: string) => `/admin/question-papers/${id}/restore`,
   },
 } as const

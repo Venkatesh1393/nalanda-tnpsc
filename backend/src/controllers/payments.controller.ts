@@ -35,6 +35,21 @@ export async function verifyPayment(req: Request, res: Response): Promise<void> 
   sendSuccess(res, result)
 }
 
+export async function createPaperUnlockOrder(req: Request, res: Response): Promise<void> {
+  if (!req.user) throw ApiError.unauthorized()
+  const order = await paymentService.createPaperUnlockOrder(req.user.sub)
+  sendSuccess(res, order, 201)
+}
+
+export async function verifyPaperUnlockPayment(req: Request, res: Response): Promise<void> {
+  if (!req.user) throw ApiError.unauthorized()
+  const result = await paymentService.verifyPaperUnlockPayment(
+    req.user.sub,
+    req.body as VerifyPaymentBody,
+  )
+  sendSuccess(res, result)
+}
+
 /**
  * Unauthenticated by design — Razorpay calls this server-to-server, never
  * carrying a Nalanda session token. Trust is established entirely by the

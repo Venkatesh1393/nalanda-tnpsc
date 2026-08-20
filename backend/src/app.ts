@@ -21,7 +21,7 @@ import routes from './routes'
  */
 export function createApp(): Express {
   const app = express()
-
+app.set('trust proxy', 1);
   // Security/parsing middleware, in the order Express recommends applying them.
   app.use(helmet())
   app.use(cors({ origin: corsOrigins, credentials: true }))

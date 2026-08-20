@@ -1,4 +1,5 @@
 import {
+  Archive,
   BarChart3,
   BookOpen,
   CreditCard,
@@ -32,6 +33,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'AI Question Generator', href: ROUTES.aiQuestionGenerate, icon: Sparkles },
   { label: 'Current Affairs', href: ROUTES.currentAffairs, icon: Newspaper },
   { label: 'Live Exams', href: ROUTES.liveExams, icon: Timer },
+  { label: 'Question Papers', href: ROUTES.questionPapers, icon: Archive },
   { label: 'Subscriptions', href: ROUTES.subscriptions, icon: CreditCard },
   { label: 'Analytics', href: ROUTES.analytics, icon: BarChart3 },
   { label: 'Settings', href: ROUTES.settings, icon: Settings },

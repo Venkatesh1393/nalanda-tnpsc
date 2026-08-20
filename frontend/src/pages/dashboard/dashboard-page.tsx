@@ -17,6 +17,7 @@ import {
   DailyStudyGoalCard,
   NotificationsCard,
   PremiumBanner,
+  PreviousYearPapersCard,
   QuickPracticeCard,
   RecentActivityCard,
   RecommendedTopicsCard,
@@ -112,6 +113,8 @@ export function DashboardPage() {
           <CurrentAffairsCard />
           <UpcomingExamsCard />
         </div>
+
+        <PreviousYearPapersCard />
 
         <QuickPracticeCard />
 

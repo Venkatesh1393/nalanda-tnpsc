@@ -106,6 +106,10 @@ export const ROUTES = {
    * same query-param-handoff precedent as `practice(':mode')`'s
    * `?subtopicId=`. */
   aiTutor: '/app/ai-tutor',
+  /** Previous Year Question Papers — real, admin-uploaded PDFs by exam+year
+   * (distinct from Practice's PYQ mode, which practices individual PYQ-
+   * tagged questions rather than real paper documents). */
+  questionPapers: '/app/question-papers',
   subscription: '/app/payments/subscription',
   /** Settings (docs/InformationArchitecture.md §7.5 — Profile is the
    * default tab). `section` is a plain string (not the

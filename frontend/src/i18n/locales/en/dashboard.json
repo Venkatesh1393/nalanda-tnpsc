@@ -87,6 +87,11 @@
       "mock": "Mock Test"
     }
   },
+  "previousYearPapersCard": {
+    "heading": "Previous Year Papers",
+    "description": "Real TNPSC exam papers, year by year — first 5 downloads free.",
+    "action": "Browse Papers"
+  },
   "aiMentorCard": {
     "heading": "AI Mentor",
     "errorTitle": "Your AI mentor is briefly unavailable",

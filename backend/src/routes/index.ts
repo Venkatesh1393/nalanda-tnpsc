@@ -20,6 +20,7 @@ import onboardingRoutes from './onboarding.routes'
 import paymentsRoutes from './payments.routes'
 import practiceRoutes from './practice.routes'
 import publicRoutes from './public.routes'
+import questionPapersRoutes from './questionPapers.routes'
 import questionsRoutes from './questions.routes'
 import searchRoutes from './search.routes'
 import studyMaterialsRoutes from './studyMaterials.routes'
@@ -49,6 +50,7 @@ router.use('/learn', learnRoutes)
 router.use('/learning-progress', learningProgressRoutes)
 router.use('/bookmarks', bookmarksRoutes)
 router.use('/questions', questionsRoutes)
+router.use('/question-papers', questionPapersRoutes)
 router.use('/practice', practiceRoutes)
 router.use('/live-exams', liveExamRoutes)
 router.use('/gamification', gamificationRoutes)

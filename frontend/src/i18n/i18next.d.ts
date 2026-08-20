@@ -15,6 +15,7 @@ import type landing from './locales/en/landing.json'
 import type payments from './locales/en/payments.json'
 import type search from './locales/en/search.json'
 import type aiTutor from './locales/en/aiTutor.json'
+import type questionPapers from './locales/en/questionPapers.json'
 
 /**
  * Types every `t('namespace:some.key')` call against the real `en/` key
@@ -43,6 +44,7 @@ declare module 'i18next' {
       payments: typeof payments
       search: typeof search
       aiTutor: typeof aiTutor
+      questionPapers: typeof questionPapers
     }
   }
 }

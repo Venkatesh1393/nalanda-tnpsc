@@ -16,6 +16,7 @@ import landingEn from './locales/en/landing.json'
 import paymentsEn from './locales/en/payments.json'
 import searchEn from './locales/en/search.json'
 import aiTutorEn from './locales/en/aiTutor.json'
+import questionPapersEn from './locales/en/questionPapers.json'
 
 import commonTa from './locales/ta/common.json'
 import authTa from './locales/ta/auth.json'
@@ -32,6 +33,7 @@ import landingTa from './locales/ta/landing.json'
 import paymentsTa from './locales/ta/payments.json'
 import searchTa from './locales/ta/search.json'
 import aiTutorTa from './locales/ta/aiTutor.json'
+import questionPapersTa from './locales/ta/questionPapers.json'
 
 /**
  * `LanguageProvider` (providers/language-provider.tsx) is the single
@@ -64,6 +66,7 @@ export const resources = {
     payments: paymentsEn,
     search: searchEn,
     aiTutor: aiTutorEn,
+    questionPapers: questionPapersEn,
   },
   ta: {
     common: commonTa,
@@ -81,6 +84,7 @@ export const resources = {
     payments: paymentsTa,
     search: searchTa,
     aiTutor: aiTutorTa,
+    questionPapers: questionPapersTa,
   },
 } as const
 

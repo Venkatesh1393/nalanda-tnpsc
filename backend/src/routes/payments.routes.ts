@@ -49,6 +49,25 @@ router.post(
   asyncHandler(paymentsController.verifyPayment),
 )
 
+// Previous Year Question Papers unlock (flat ₹29 one-time purchase) — same
+// checkout-rate-limit and dual-confirmation shape as the subscription order/
+// verify pair above, reusing `verifyPaymentBodySchema` as-is since the
+// signature-verification request body is identical either way.
+router.post(
+  '/question-papers/order',
+  authenticate,
+  checkoutRateLimiter,
+  asyncHandler(paymentsController.createPaperUnlockOrder),
+)
+
+router.post(
+  '/question-papers/verify',
+  authenticate,
+  checkoutRateLimiter,
+  validate({ body: verifyPaymentBodySchema }),
+  asyncHandler(paymentsController.verifyPaperUnlockPayment),
+)
+
 // No `authenticate` — see `controllers/payments.controller.ts#webhook`'s
 // header comment. No `validate()` either: the body is verified by
 // signature, not by shape, before anything touches it.

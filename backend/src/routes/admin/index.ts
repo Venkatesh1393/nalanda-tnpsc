@@ -14,6 +14,7 @@ import liveExamsRoutes from './liveExams.routes'
 import monitoringRoutes from './monitoring.routes'
 import notificationsRoutes from './notifications.routes'
 import paymentsRoutes from './payments.routes'
+import questionPapersRoutes from './questionPapers.routes'
 import questionsRoutes from './questions.routes'
 import subscriptionsRoutes from './subscriptions.routes'
 import syllabusRoutes from './syllabus.routes'
@@ -44,6 +45,7 @@ router.use('/users', usersRoutes)
 router.use('/audit-logs', auditLogsRoutes)
 router.use('/invites', invitesRoutes)
 router.use('/questions', questionsRoutes)
+router.use('/question-papers', questionPapersRoutes)
 // Sprint 4 Step 54 — Admin Content Management System. `syllabusRoutes`/
 // `learningContentRoutes` mount with no prefix (their own paths are already
 // fully qualified: `/exams`, `/subjects`, `/topics`, `/subtopics`,

@@ -99,3 +99,16 @@ export const uploadPdfMetadataFile = createUploadMiddleware({
   allowedMimeTypes: PDF_METADATA_ALLOWED_MIME_TYPES,
   allowedExtensions: PDF_METADATA_ALLOWED_EXTENSIONS,
 })
+
+/** Previous Year Question Papers — always a real PDF of the exam paper
+ * itself (never an image), hence the PDF-only allowlist unlike the image/
+ * PDF-mixed `uploadStudyMaterialFile` above. Same 20MB ceiling as study
+ * material files. */
+const QUESTION_PAPER_MIME_TYPES = new Set(['application/pdf'])
+const QUESTION_PAPER_EXTENSIONS = new Set(['.pdf'])
+
+export const uploadQuestionPaperFile = createUploadMiddleware({
+  maxFileSizeBytes: 20 * 1024 * 1024,
+  allowedMimeTypes: QUESTION_PAPER_MIME_TYPES,
+  allowedExtensions: QUESTION_PAPER_EXTENSIONS,
+})

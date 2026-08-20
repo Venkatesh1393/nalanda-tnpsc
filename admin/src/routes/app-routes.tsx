@@ -13,6 +13,8 @@ import { LiveExamEditorPage } from '@/pages/live-exams/live-exam-editor-page'
 import { LiveExamsListPage } from '@/pages/live-exams/live-exams-list-page'
 import { LoginPage } from '@/pages/login/login-page'
 import { PlaceholderPage } from '@/pages/placeholder/placeholder-page'
+import { QuestionPaperEditorPage } from '@/pages/question-papers/question-paper-editor-page'
+import { QuestionPapersListPage } from '@/pages/question-papers/question-papers-list-page'
 import { QuestionEditorPage } from '@/pages/questions/question-editor-page'
 import { QuestionImportPage } from '@/pages/questions/question-import-page'
 import { QuestionsListPage } from '@/pages/questions/questions-list-page'
@@ -69,6 +71,12 @@ export function AppRoutes() {
           <Route
             path={ROUTES.liveExamEdit(':liveExamId')}
             element={<LiveExamEditorPage />}
+          />
+          <Route path={ROUTES.questionPapers} element={<QuestionPapersListPage />} />
+          <Route path={ROUTES.questionPaperNew} element={<QuestionPaperEditorPage />} />
+          <Route
+            path={ROUTES.questionPaperEdit(':paperId')}
+            element={<QuestionPaperEditorPage />}
           />
           <Route path={ROUTES.subscriptions} element={<SubscriptionsListPage />} />
           <Route

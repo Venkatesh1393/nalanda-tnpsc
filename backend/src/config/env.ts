@@ -99,6 +99,9 @@ export const isTest = env.NODE_ENV === 'test'
 
 /** CORS_ORIGIN may be a single origin or a comma-separated list. */
 export const corsOrigins = env.CORS_ORIGIN.split(',').map((origin) => origin.trim())
+console.log("NODE_ENV =", env.NODE_ENV)
+console.log("CORS_ORIGIN =", env.CORS_ORIGIN)
+console.log("corsOrigins =", corsOrigins)
 
 /**
  * Sprint 4 Step 68 — Production Readiness. Catches the specific

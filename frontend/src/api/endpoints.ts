@@ -138,6 +138,12 @@ export const endpoints = {
     cancelSubscription: '/payments/subscription/cancel',
     invoices: '/payments/invoices',
     invoice: (invoiceId: string) => `/payments/invoices/${invoiceId}`,
+    questionPapersOrder: '/payments/question-papers/order',
+    questionPapersVerify: '/payments/question-papers/verify',
+  },
+  questionPapers: {
+    list: '/question-papers',
+    download: (id: string) => `/question-papers/${id}/download`,
   },
   leaderboard: {
     list: '/leaderboard',

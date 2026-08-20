@@ -1,0 +1,39 @@
+{
+  "page": {
+    "heading": "Previous Year Question Papers",
+    "subtitle": "Real TNPSC exam papers, year by year.",
+    "dashboard": "Dashboard"
+  },
+  "filters": {
+    "allExams": "All exams",
+    "allYears": "All years"
+  },
+  "freeBanner": {
+    "remaining": "{{count}} free download(s) remaining",
+    "exhausted": "You've used all your free downloads for now",
+    "unlocked": "All papers unlocked"
+  },
+  "card": {
+    "download": "Download",
+    "downloading": "Downloading…",
+    "locked": "Unlock to download"
+  },
+  "loadErrorTitle": "Couldn't load question papers",
+  "emptyTitle": "No question papers yet",
+  "emptyDescription": "Check back soon — papers are added regularly.",
+  "downloadErrorToast": "Couldn't download this paper — please try again.",
+  "paywall": {
+    "title": "Unlock all Previous Year Papers",
+    "description": "You've used your {{limit}} free downloads. Pay once, download every paper — past and future — forever.",
+    "priceLabel": "₹29 one-time",
+    "unlockButton": "Unlock for ₹29",
+    "cancelButton": "Not now",
+    "verifiedToast": "Payment received — unlocking your papers…",
+    "verifyErrorToast": "We couldn't verify your payment automatically. If money was deducted, contact support — we'll sort it out.",
+    "cancelledToast": "Checkout cancelled — no charge was made.",
+    "failedToast": "Payment failed: {{reason}}",
+    "orderErrorToast": "Couldn't start checkout — please try again.",
+    "scriptLoadErrorToast": "Couldn't load the payment form — check your connection and try again.",
+    "unlockedToast": "All papers unlocked! Happy studying."
+  }
+}
